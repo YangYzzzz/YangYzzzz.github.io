@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>『计算机网络』计算机网络实验——路由协议分析</title>
+      <link href="/post/163e301f.html"/>
+      <url>/post/163e301f.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="『计算机网络』计算机网络实验——路由协议分析"><a href="#『计算机网络』计算机网络实验——路由协议分析" class="headerlink" title="『计算机网络』计算机网络实验——路由协议分析"></a>『计算机网络』计算机网络实验——路由协议分析</h1><p>针对套件二的计网实验最难点在于OSPF和BGP协议的理解，简要记录如下。</p><h2 id="自治系统"><a href="#自治系统" class="headerlink" title="自治系统"></a>自治系统</h2><p>内部：RIP, OSPF</p><p>外部：BGP</p><h2 id="OSPF"><a href="#OSPF" class="headerlink" title="OSPF"></a>OSPF</h2><h3 id="Peer关系"><a href="#Peer关系" class="headerlink" title="Peer关系"></a>Peer关系</h3><ul><li>邻居状态机：</li></ul><p><img src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F12%2F21-06-47-3adfd5e11278b0ded5d23b5abc171b5f-image-20240511133938639-bc8c9b.png" alt="image-20240511133938639"></p><ul><li><p>建立邻接关系的过程（注意状态转移都是双方都有的）：</p><ol><li><p><code>Hello</code>报文确定邻居。状态： <code>down - init - 2-way</code></p></li><li><p>比较<code>routerid</code>，确定主从关系 状态：<code>Exstart</code></p></li><li><p>开始交换LSA摘要信息DBD，主方每次seq+1，从方每次传上一个从主方获得seq，以此来确保双方信息交换的正确性与顺序性。状态：<code>Exchange</code></p></li><li><p>交换完毕后，检查新信息是否与自己已有信息冲突，若不冲突则直接<code>Full</code>，冲突则<code>Loading</code>，发送LSR报文请求，对方发送LSU回复，收到回复后发送LSAck收到。双方都无冲突后，变为<code>Full</code>状态，如此建立起<strong>邻接关系</strong>。</p></li></ol></li></ul><h3 id="链路状态LSA"><a href="#链路状态LSA" class="headerlink" title="链路状态LSA"></a>链路状态LSA</h3><ul><li><p>第一类LSA和第二类LSA适用于<strong>同一Area</strong>下：</p><ul><li>四种不同类型的网络：末端网络，PPP，点到多点网络（使用第一类LSA），全连接网络（使用第二类LSA）<ul><li>路由器和交换机连接：Net网段</li><li>路由器和路由器连接：StubNet末端网段</li></ul></li><li>解决全连接网络的N方连接问题：第二类LSA与DR推举<ul><li>OSPF从该网络中选举一台路由器作为DR，负责传递信息，所有路由器都只将路由信息发送给DR，再由DR将信息发送给本网段其他路由器。BDR是备选DR，也与所有路由器建立邻接关系并交换路由信息，在DR失效后立刻成为DR，然后其他路由器重新选举BDR。其余所有路由器DROther不建立邻接关系，仅周期性发送<code>Hello</code>将邻居状态机保持在<code>2-way</code>。</li><li>DR是某个网段的概念，是针对路由器接口而言的。因此在描述全连接网络（以太网）时，仅使用一个一类LSA描述DR，和一个二类LSA描述DR手下的全部信息即可。</li></ul></li></ul></li><li><p>后三类LSA适用于<strong>不同Area</strong>下：</p><ul><li>多个Area包含的路由器称作ABR路由器，但路由器的每一个接口都必须唯一确定属于一个Area。</li><li>第三类LSA：ABR收到内部的一二类LSA时，会据此生成三类LSA，传播到相邻的Area。区域间的路由信息是通过ABR进行交互的，ABR将区域内已计算出的路由封装成第三类LSA发送到另一个区域。</li><li>第四类LSA：第五类LSA（通告外部路由的LSA）不能直接通过ABR传播到其它区域，因此ABR会产生第四类LSA来通告ASBR的存在。</li><li>第五类LSA：由ASBR生成的，用于通告外部路由（External Routes）。当ASBR引入非OSPF协议的路由信息时，它会生成第五类LSA，并将这些信息传播到整个自治系统（AS）内。</li></ul></li></ul><h3 id="路由器类型"><a href="#路由器类型" class="headerlink" title="路由器类型"></a>路由器类型</h3><ul><li><p>区域内路由器IAR：只生成一二类LSA，只保存一个LSDB。</p></li><li><p>区域边界路由器ABR: 该路由器同时属于至少两个区域，必须有一个是骨干区域Area0</p></li><li><p>骨干路由器BBR：至少有一个接口属于Area0(可以是虚拟连接？)，因此包含Area0的所有IAR和接口在Area0的ABR。该路由器为每一个所属的区域都生成第一类和第二类LSA,为每一个所属的区域保存一个LSDB,并根据需要生成Network Summary LSA(Type=3)和ASBR Summary LSA(Type=4)。</p></li><li><p>自治系统边界路由器ASBR：该路由器引入其他路由协议(静态路由和接口直连路由)，并不一定在拓扑结构中位于自治系统边界，可能是区域内路由器，也可能是ABR，只要引入了外部信息就是ASBR，生成第五类LSA。</p></li></ul><p>为解决第三类LSA自环问题，所有Area都要和骨干网络相连，无法物理相连就使用虚连接。</p><h3 id="OSPF路由算法"><a href="#OSPF路由算法" class="headerlink" title="OSPF路由算法"></a>OSPF路由算法</h3><p>在区域内部使用最短路径树（迪杰斯特拉）算法。在一个区域内，各台路由器最后的LSDB都是相同的，将其转换成一张带权的有向图。<strong>图相同，但是每台路由器对应的根节点不同</strong>，将某台路由器作为根节点计算到各路由器的最短距离。</p><ol><li><p>初始化，pred数组(根忽略，其余无)，vis数组(根为1，其余为0)，dis数组(根为0，其余为无穷)</p></li><li><p>每次选最小路径迭代…</p></li></ol><p><img src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F12%2F21-18-46-3a31e449ff683426755943d3dc159c0a-image-20240511150041541-594588.png" alt="image-20240511150041541"></p><h2 id="BGP协议"><a href="#BGP协议" class="headerlink" title="BGP协议"></a>BGP协议</h2><p>用于自治系统间，基于TCP，只传递路由信息，而不计算路由，不暴露AS内部的网络拓扑。这个协议更复杂，无需彻底弄清。</p><h3 id="BGP对等体"><a href="#BGP对等体" class="headerlink" title="BGP对等体"></a>BGP对等体</h3><ul><li><p><strong>概念</strong>：两个建立BGP会话的路由器互为BGP对等体，BGP对等体之间可以交换路由表。根据AS是否同，分为EBGP（不同）和IBGP（同）。</p></li><li><p><strong>建立对等体</strong>：TCP三次握手后，相互发送OPEN报文，参数协商（自身AS号，自身router id）。后续通过keep-alive判断连接是否无问题，使用UPDATE报文通告路由。</p></li></ul><p>虽然BGP是运行于自治系统之间的路由协议，但要实现路由信息的全网传递就需要<strong>在同一个AS的边界路由器之间建立IBGP连接</strong>。</p><h3 id="BGP路由表，状态转移"><a href="#BGP路由表，状态转移" class="headerlink" title="BGP路由表，状态转移"></a>BGP路由表，状态转移</h3><ul><li><p>BGP状态转移图：</p><p><img src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F12%2F21-06-49-d916d6a6d067578333db14e9d68f02bc-image-20240511155329568-d44a8b.png" alt="image-20240511155329568"><img src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F12%2F21-20-32-8bc028da6de41fbe9969b3fa075a302f-image-20240511155319186-be5593.png" alt="image-20240511155319186"></p></li><li><p><strong>BGP路由表生成</strong>：</p><ul><li><p>network方式：使用network命令可以将当前设备路由表中的路由（非BGP）发布到BGP路由表中并通告给邻居，和OSPF中使用network命令的方式大同小异，只不过在BGP宣告时，只需要宣告网段+掩码数即可，如：<code>network 12.12.0.0 16</code>。</p></li><li><p>Import方式：使用Import命令可以将该路由器学到的路由信息重分发到BGP路由表中，是BGP宣告路由的一种方式，可以引入BGP的路由包括：直连路由、静态路由及动态路由协议学到的路由。其命令格式与在RIP中重分发OSPF相似。</p></li></ul></li><li><p><strong>BGP通告原则</strong>：</p><ul><li><p>从IBGP对等体获得的BGP路由，BGP设备只传递给它的EBGP对等体。</p></li><li><p>从EBGP对等体获得的BGP路由，BGP设备传递给它所有EBGP和IBGP对等体（对等体是IBGP只能传递一跳，对等体是EBGP则不限制）</p></li><li><p>当存在多条到达同一目的地址的有效路由时，BGP设备只将最优路由发布给对等体</p></li><li><p>路由更新时，BGP设备只发送更新的BGP路由</p></li><li><p>所有对等体发送的路由，BGP设备都会接收</p></li><li><p>所有EBGP对等体在传递过程中下一跳改变</p></li><li><p>所有IBGP对等体在传递过程中下一跳不变（需要特别注意）</p></li><li><p>默认EBGP传递时 TTL值为1（需要特别注意）</p></li><li><p>默认IBGP传递时 TTL值为255</p></li></ul></li></ul><ul><li><strong>下一跳问题</strong>：在iBGP中，下一跳通常保持为从eBGP对等体学习到的原始下一跳。因此，iBGP对等体需要能够到达这个下一跳地址，这通常通过内部的IGP（如 OSPF 或 IS-IS）来确保。因此面对一些拓扑网络时，配置内部IGP和手动引入静态路由两种方案至少要选一个，否则会出现“下一跳问题”。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机科学 </category>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 计算机网络 </tag>
+            
+            <tag> 课内实验 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>『计算机网络』计算机网络理论——期末复习</title>
       <link href="/post/c0060df1.html"/>
       <url>/post/c0060df1.html</url>
