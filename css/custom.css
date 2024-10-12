@@ -9,6 +9,7 @@
 /* 白天模式遮罩透明 */
 #footer::before {
     background: transparent !important;
+    color: #000000; /* 设置文字颜色为黑色 */
 }
 /*#page-header::before {*/
 /*    background: transparent !important;*/
