@@ -11,6 +11,28 @@
         <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="『智谱清言』深度学习环境常见问题"><a href="#『智谱清言』深度学习环境常见问题" class="headerlink" title="『智谱清言』深度学习环境常见问题"></a>『智谱清言』深度学习环境常见问题</h1><p>持续更新</p><h2 id="问题一"><a href="#问题一" class="headerlink" title="问题一"></a>问题一</h2><p><strong>环境</strong>：Ubuntu 22.0，8*A100，Nvidia-smi CUDA:12.2，安装的CUDA版本为10.1</p><p>之前一直能正常使用CUDA，今天突然无法正常使用GPU，报错如下：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">/home/yangbowen/anaconda3/envs/yangbowen/lib/python3.10/site-packages/torch/cuda/__init__.py:128: UserWarning: CUDA initialization: Unexpected error from cudaGetDeviceCount(). Did you run some cuda functions before calling NumCudaDevices() that might have already set an error? Error 802: system not yet initialized (Triggered internally at ../c10/cuda/CUDAFunctions.cpp:108.)</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure><p>一开始以为是CUDA版本不对应，但是这台机器的CUDA是管理员配置好的，且有进程在运行，无法卸载重装。</p><p>经大量查阅资料，发现是不小心使用了 <code>apt update</code> 更新了 <code>nvidia-fabricmanager</code> 的版本，而 <code>nvidia-fabricmanager</code> 必须要和CUDA版本保持一致，解决方案如下：</p><ul><li><code>systemctl status nvidia-fabricamanager</code> 查看当前状态为 failed，确定此处出现问题</li></ul><p><img src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F14%2F15-15-15-5f58efd6c44661bddd1df36a443614bf-image-20241014151508230-6bc4c6.png" alt="image-20241014151508230"></p><ul><li>查看版本更新改动，可以发现版本从 535.129.03-1 更新为 535.183.06-0</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /var/log/dpkg.log | grep nvidia</span><br><span class="line"></span><br><span class="line"><span class="string">&#x27;&#x27;</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">2024-10-08 15:03:54 status installed nvidia-fabricmanager-535:amd64 535.129.03-1</span></span><br><span class="line"><span class="string">2024-10-14 12:10:19 upgrade nvidia-fabricmanager-535:amd64 535.129.03-1 535.183.06-0ubuntu0.20.04.1</span></span><br><span class="line"><span class="string">&#x27;</span><span class="string">&#x27;&#x27;</span></span><br></pre></td></tr></table></figure><ul><li>官网安装对应版本，并重新启动</li></ul><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载，选择自己的版本</span></span><br><span class="line">wget https://developer.download.nvidia.cn/compute/cuda/repos/&#123;ubuntu2204&#125;/x86_64/nvidia-fabricmanager-&#123;535_535.129.03-1&#125;_amd64.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">sudo apt-get install ./nvidia-fabricmanager-535_535.129.0</span><br><span class="line">3-1_amd64.deb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重新启动</span></span><br><span class="line">systemctl <span class="built_in">enable</span> nvidia-fabricmanager</span><br><span class="line">systemctl start nvidia-fabricmanager</span><br></pre></td></tr></table></figure><ul><li>再次查看状态，并重新<code>import torch</code>，发现已经解决！</li></ul><p><img src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F14%2F15-20-10-94d1d1fb5a3f93a95d7505d3d3a7cf2c-image-20241014152010673-14204c.png" alt="image-20241014152010673"></p>]]></content>
       
       
+      <categories>
+          
+          <category> 计算机科学 </category>
+          
+          <category> 深度学习 </category>
+          
+          <category> MLLM/LLM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器学习系统 </tag>
+            
+            <tag> 深度学习 </tag>
+            
+            <tag> MLLM/LLM </tag>
+            
+            <tag> 实习 </tag>
+            
+        </tags>
       
     </entry>
     
@@ -291,6 +313,31 @@
         <tags>
             
             <tag> 编译技术 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>『杂谈』What makes a good PhD student?</title>
+      <link href="/post/5eeef2ab.html"/>
+      <url>/post/5eeef2ab.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h1 id="『杂谈』What-makes-a-good-PhD-student"><a href="#『杂谈』What-makes-a-good-PhD-student" class="headerlink" title="『杂谈』What makes a good PhD student?"></a>『杂谈』What makes a good PhD student?</h1><p>翻译自一篇Nature文章，作者是电气工程专业。</p><p>读博士应该是一趟充满乐趣且充满回报的旅程，因为你能够花费你的全部工作时间去发现探寻新想法，并且从中的得到回报，还不需要承担行政上的责任。尽管他们会得到很少的报酬，还会长时间工作，并且缺少安全感，但是那些执着于科学事业的研究者之所以如此做，是因为这是他们想要追求的全部。</p><p>不幸地是，大多数新博士生都是缺少提前准备的，并且因此他们之中的很少数将来会实现自己成为独立科研者的抱负。这主要的原因一是在多数大学存在固有的“成绩膨胀”情况，使得很难从毕业生中辨别出真正有天赋的一流学生，二是目前大学承担着培养越来越多博士生的压力。（The main reasons for this are the ‘grade creep’ inherent at most universities, making it difficult to identify the really talented first-class graduates from the rest, and the pressure on universities to graduate as many PhD students as possible.）结果是我们（学校/导师）招收（enrol）了太多的博士生而没有清楚告诉他们博士应该需要（entail）什么。我们因此将自己以及学生们都置入困难与沮丧的境地。</p><p>那么我们该向博士生给出哪些有前景的建议呢？</p><ul><li>选择一位导师，你钦佩他的工作并且他拥有足够的科研经费，得到部门机构的大力支持。</li><li>为你自己的项目负责。</li><li>努力工作——工作日和多数周末的大部分时间都要工作。如果研究的方向在你的兴趣点，那么这将很轻松，反之你可能在不适合你的领域。注意谁在结束一天工作后还带着材料回家继续工作，这便是成功的原因，而非结果。</li><li>在一些周末和体面的假期出去放松，这会使你不会燃尽。</li><li><strong>阅读你当前领域的文献，过去的，现在的，相关的。在你不知道当前领域已经发展到哪步时，你不可能对一篇文章做出原始贡献。</strong></li><li><strong>计划你每天和每周的安排要与你安排的实验相吻合（dovetail），以便最小化停工时间。（规划好实验安排，人和计算机可以异步而非同步）</strong></li><li><strong>保存一本实验笔记，并每天记录更新。</strong></li><li>要有创造力，时刻思考你在作什么，为什么做，是否寻找更好的方式去做。不要将博士的路线图看作是导师为你铺好的。</li><li><strong>培养良好写作能力</strong>：它将极大（immeasurably）轻松你的学术生涯</li><li><p>想要取得成功你必须至少具备一下四条：聪明，有自驱力，有创造力，努力工作，有熟练技巧，运气。你不能依赖于运气，所以最好聚焦于其他几个。</p></li><li><p>先完成，再完美~</p></li></ul><p>良好代码能力和领域内基本知识是基本功。已有记录的良好习惯，博士期间必须培养的能力：<strong>计划，阅读文献，写作</strong>。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 感想随笔 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 杂谈 </tag>
             
         </tags>
       
