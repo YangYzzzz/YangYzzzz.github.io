@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>『信息论』信息论——学习笔记1</title>
+      <link href="/post/a83ff101.html"/>
+      <url>/post/a83ff101.html</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="\assets\js\Meting.min.js"></script><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>课程来自上交计算机学院信息论课程。</p><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>信息论在概率论，计算机科学，人工智能中有大量应用，诸如：决策树中基于最大信息增益进行决策，最常用的交叉熵损失函数，编码器-解码器的概念，Viterbi Algorithm算法。同时信息论与密码学，控制论，通信原理等均密切相连，可以称其为工科里基础中的基础学科，因此系统学习这门课是有必要的。</p><p>通信要解决的根本问题是信道噪声问题，即通信的基本问题是在一点上精确地或近似地再现在另一点上选择的消息。</p><blockquote><p>The foudamental problem of communication is that of reproducing at one point either exactly or approximately a message selected at another point.</p></blockquote><h2 id="信息熵"><a href="#信息熵" class="headerlink" title="信息熵"></a>信息熵</h2><p>熵：描述随机变量的不确定性</p><script type="math/tex; mode=display">H(X)=-\sum{p(x)logp(x)}</script><p>概率论复习，样本空间$\mathbf{X}$为实验所有可能结果的集合，随机变量$X$是定义在样本空间上的一个函数，在一个样本空间内，允许定义多个随机变量。</p><p>其中，$x$为样本空间的所有可能取值，$X$为随机变量，$p(x)$为概率密度函数</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机科学 </category>
+          
+          <category> 信息论 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 信息论 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>『深度学习』动手学深度学习——阅读笔记2</title>
       <link href="/post/52e1e34e.html"/>
       <url>/post/52e1e34e.html</url>
