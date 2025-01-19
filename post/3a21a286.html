@@ -1,0 +1,451 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>『计算机网络』计算机网络实验——常用指令 | Yang's CS World</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="『计算机网络』计算机网络实验——常用指令配置NAT（关键）123456789101112131415161718[R1]acl basic 2001 &#x2F;&#x2F; 在V7设备中（线下设备），使用acl basic命令；在V5设备中（线上设备），使用acl number命令[R1-acl-2001]rule permit source 10.0.0.0 0.0.0.255 &#x2F;&#x2F; 根据局域网的网段配置[R1-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="『计算机网络』计算机网络实验——常用指令">
+<meta property="og:url" content="https://yangyzzzz.github.io/post/3a21a286.html">
+<meta property="og:site_name" content="Yang&#39;s CS World">
+<meta property="og:description" content="『计算机网络』计算机网络实验——常用指令配置NAT（关键）123456789101112131415161718[R1]acl basic 2001 &#x2F;&#x2F; 在V7设备中（线下设备），使用acl basic命令；在V5设备中（线上设备），使用acl number命令[R1-acl-2001]rule permit source 10.0.0.0 0.0.0.255 &#x2F;&#x2F; 根据局域网的网段配置[R1-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yangyzzzz.github.io/img/fufu4.jpeg">
+<meta property="article:published_time" content="2024-06-16T10:12:44.000Z">
+<meta property="article:modified_time" content="2024-10-12T13:06:07.035Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="课内实验">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yangyzzzz.github.io/img/fufu4.jpeg"><link rel="shortcut icon" href="/img/avatar.jpeg"><link rel="canonical" href="https://yangyzzzz.github.io/post/3a21a286.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d431d91edffce9d7bd7ade045956b24b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":5,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10000,"languages":{"author":"作者: Yang","link":"链接: ","source":"来源: Yang's CS World","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '『计算机网络』计算机网络实验——常用指令',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-12 21:06:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/light.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/windmill.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/fufu4.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="Yang's CS World"></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">『计算机网络』计算机网络实验——常用指令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-16T10:12:44.000Z" title="发表于 2024-06-16 18:12:44">2024-06-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-12T13:06:07.035Z" title="更新于 2024-10-12 21:06:07">2024-10-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="『计算机网络』计算机网络实验——常用指令"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/3a21a286.html#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="『计算机网络』计算机网络实验——常用指令"><a href="#『计算机网络』计算机网络实验——常用指令" class="headerlink" title="『计算机网络』计算机网络实验——常用指令"></a>『计算机网络』计算机网络实验——常用指令</h1><h2 id="配置NAT（关键）"><a href="#配置NAT（关键）" class="headerlink" title="配置NAT（关键）"></a>配置NAT（关键）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[R1]acl basic 2001 // 在V7设备中（线下设备），使用acl basic命令；在V5设备中（线上设备），使用acl number命令</span><br><span class="line">[R1-acl-2001]rule permit source 10.0.0.0 0.0.0.255 // 根据局域网的网段配置</span><br><span class="line">[R1-acl-2001]rule deny sourse any // 允许IP源地址为10.0.0.0/24的外出数据包</span><br><span class="line">[R1]nat address-group 1 // 进入地址池1</span><br><span class="line">[R1-address-group-1]address 192.168.5.105 192.168.5.109 // 定义一个包含5个公网地址的地址池，地址池名为1</span><br><span class="line">[R1]interface e 1/0/1</span><br><span class="line">[R1-Ethernet 1/0/1]nat outbound 2001 address-group 1 // 在出接口e 1/0/1启动地址转换，指定number和group</span><br><span class="line">[R1]ip route-static 0.0.0.0 0.0.0.0 192.168.5.1 // 在路由表添加默认静态路由，</span><br><span class="line">分别是目标IP，目标IP子网掩码，下一条地址</span><br><span class="line"></span><br><span class="line">acl basic/number 2001</span><br><span class="line">rule permit source 10.0.0.0 0.0.255.255 // 看情况</span><br><span class="line">rule deny source any // 可以不用</span><br><span class="line">nat address-group 1</span><br><span class="line">address x.x.x.x x.x.x.x</span><br><span class="line">inter e0/1</span><br><span class="line">nat outbound 2001 address-group 1</span><br><span class="line">ip route-static 0.0.0.0 0.0.0.0 192.168.5.1</span><br></pre></td></tr></table></figure>
+<h3 id="当于OSPF结合时，需要通告默认路由"><a href="#当于OSPF结合时，需要通告默认路由" class="headerlink" title="当于OSPF结合时，需要通告默认路由"></a>当于OSPF结合时，需要通告默认路由</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R1]ospf // 进入ospf</span><br><span class="line">[R1-ospf-1]default-route-advertise cost 100 // 通告默认路由配置</span><br></pre></td></tr></table></figure>
+<h2 id="VLAN：数据链路层"><a href="#VLAN：数据链路层" class="headerlink" title="VLAN：数据链路层"></a>VLAN：数据链路层</h2><h3 id="VLAN端口分类"><a href="#VLAN端口分类" class="headerlink" title="VLAN端口分类"></a>VLAN端口分类</h3><p>交换机的端口可以分为Access, Trunk和Hybrid三类。</p>
+<ul>
+<li>Access：连接不支持VLAN技术的终端设备（如主机）的（交换机）端口，主机和交换机的连接端口通常都是Access</li>
+<li>Trunk：连接支持VLAN技术的网络设备（如交换机）的（交换机）端口，收到的数据一般带有VLAN标签（数据帧VLAN和端口默认VLAN ID相同的除外）；向外发送数据帧时，须保证接收端可以区分不同的VLAN，因此常常需要添加VLAN标签（数据帧VLAN ID和端口默认VLAN  ID相同的除外），一般<strong>用于交换机之间的连接</strong>。</li>
+<li>Hybrid：Access和Trunk的混合模式，在Hybrid下工作的端口可以属于多个VLAN，可以接收和发送多个VLAN的报文，可以用于交换机之间的连接，也可以用于连接用户。</li>
+</ul>
+<h3 id="默认VLAN"><a href="#默认VLAN" class="headerlink" title="默认VLAN"></a>默认VLAN</h3><p>每个（交换机）端口的属性，值为pvid，可以人为设置。交换机从某个端口收到一个不带VLAN标签的数据帧的时候，会在交换机内部将该数据帧视为带默认VLAN标签的数据帧。</p>
+<p>H3C交换机初始化时，将每个端口设置为VLAN1，且VLAN1是每个端口的默认VLAN(pvid=1)，VLAN1是untagged的。</p>
+<h3 id="带标签（tagged）和不带标签（untagged）"><a href="#带标签（tagged）和不带标签（untagged）" class="headerlink" title="带标签（tagged）和不带标签（untagged）"></a>带标签（tagged）和不带标签（untagged）</h3><p>tagged和untagged是端口的VLAN属性，用于确定从该端口发出的数据帧是否带VLAN标签。</p>
+<p>一般来说，Access端口是untagged的；Trunk端口只有默认VLAN才是untagged，其他端口都是tagged；Hybrid端口比较灵活，可以自由设置。</p>
+<h3 id="创建VLAN"><a href="#创建VLAN" class="headerlink" title="创建VLAN"></a>创建VLAN</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[h3c]vlan 2 // 创建vlan 2，2可以替换为其他vlan id，执行后会变为[h3c-vlan2]</span><br><span class="line">[h3c]undo vlan 2// 删除vlan 2，2可以替换为其他vlan id</span><br></pre></td></tr></table></figure>
+<h3 id="VLAN添加端口"><a href="#VLAN添加端口" class="headerlink" title="VLAN添加端口"></a>VLAN添加端口</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[h3c]vlan 2 // 创建/进入 vlan 2</span><br><span class="line">[h3c-vlan2]port ge 1/0/1 to ge 1/0/3 // 进入vlan后，使用port ... to ...将某一范围内的端口添加到该VLAN，使用的是基于端口的VLAN划分。需要注意的是，e是Ethernet的缩写，线下网络实验室应当使用g</span><br><span class="line">[h3c-vlan2]undo port ge 1/0/1 to ge 1/0/2 // 将e 1/0/1 to e 1/0/3从VLAN2中删除</span><br></pre></td></tr></table></figure>
+<h4 id="指定端口类型（trunk）"><a href="#指定端口类型（trunk）" class="headerlink" title="指定端口类型（trunk）"></a>指定端口类型（trunk）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[h3c]int e 1/0/1 // 首先进入指定的端口</span><br><span class="line">[h3c-Ethernet 1/0/1]port link-type trunk // 将端口类型设置为trunk</span><br><span class="line">[h3c-Ethernet 1/0/1]undo port link-type // 取消端口类型设置</span><br><span class="line">[h3c-Ethernet 1/0/1]port link-type hybrid // 将端口类型设置为hybrid</span><br></pre></td></tr></table></figure>
+<h4 id="指定-删除Trunk端口可以通过的VLAN数据帧"><a href="#指定-删除Trunk端口可以通过的VLAN数据帧" class="headerlink" title="指定/删除Trunk端口可以通过的VLAN数据帧"></a>指定/删除Trunk端口可以通过的VLAN数据帧</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[h3c-Ethernet 1/0/1]port trunk permit vlan 2 to 3 // 允许通过2和3的数据帧</span><br><span class="line">[h3c-Ethernet 1/0/1]undo port trnk permit vlan 2 to 3</span><br></pre></td></tr></table></figure>
+<h3 id="配置VLAN-IP"><a href="#配置VLAN-IP" class="headerlink" title="配置VLAN IP"></a>配置VLAN IP</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[H3C]inter vlan 2 // 进入interface vlan 2</span><br><span class="line">[H3C-Vlan-interface3] ip addr 40.1.1.1 24 // 配置VLAN2的ip</span><br></pre></td></tr></table></figure>
+<p>二层交换机的端口不会配置IP，VLAN 的 IP 地址是为了在网络层上为该 VLAN 中的所有端口提供服务，而不是给每个端口单独配置 IP 地址，<strong>给 VLAN 配置 IP 地址意味着你在设置一个网络层的接口，供 VLAN 中的所有设备共用作为通信的网关</strong>。</p>
+<h2 id="三个数据链路层协议"><a href="#三个数据链路层协议" class="headerlink" title="三个数据链路层协议"></a>三个数据链路层协议</h2><h3 id="PPP协议"><a href="#PPP协议" class="headerlink" title="PPP协议"></a>PPP协议</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[R1-Serial1/0]link-protocol ppp // 配置PPP</span><br><span class="line">&lt;R1&gt;debugging ppp all // 打开PPP的debug开关</span><br><span class="line">&lt;R1&gt;terminal debugging // 显示debug信息</span><br><span class="line"></span><br><span class="line">[R1-Serial 1/0]shutdown // 关闭接口</span><br><span class="line">[R1-Serial 1/0]undo shutdown // 启用接口</span><br></pre></td></tr></table></figure>
+<h3 id="PAP验证"><a href="#PAP验证" class="headerlink" title="PAP验证"></a>PAP验证</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// R1 主验证方</span><br><span class="line">[R1]local-user RTB class network // 配置用户</span><br><span class="line">[R1-local-network-RTB]service-type ppp // 配置服务类型</span><br><span class="line">[R1-local-network-RTB]password simple aaa // 配置用户密码</span><br><span class="line">[R1]interface Serial 1/0</span><br><span class="line">[R1-Serial1/0]ppp authentication pap // 授权PAP验证</span><br><span class="line">// R2 被验证方</span><br><span class="line">[R2]interface Serial 1/0</span><br><span class="line">[R2-Serial 1/0]ppp pap local-user RTB password simple aaa // 配置PAP用户名和视图</span><br><span class="line"></span><br><span class="line">&lt;R1&gt;debugging ppp pap all</span><br><span class="line">&lt;R1&gt;terminal debugging</span><br></pre></td></tr></table></figure>
+<h3 id="CHAP验证"><a href="#CHAP验证" class="headerlink" title="CHAP验证"></a>CHAP验证</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[R1]local-user RTB class network // 配置用户列表</span><br><span class="line">[R1-luser-network-RTB]service-type ppp // 配置服务类型</span><br><span class="line">[R1-luser-network-RTB]pasword simple aaa // 配置用户对应的密码</span><br><span class="line">[R1]Serial 1/0</span><br><span class="line">[R1-Serial 1/0]ppp authentication-mode chap // 授权CHAP验证</span><br><span class="line">[R1-Serial 1/0]ppp chap user RTA // 配置本地名称</span><br><span class="line"></span><br><span class="line">[R2]local-user RTA class network // 配置用户列表</span><br><span class="line">[R2-luser-network-RTA]service-type ppp //配置服务类型</span><br><span class="line">[R2-luser-network-RTA]password simple aaa // 配置用户对应的密码</span><br><span class="line">[R2]interface Serial 1/0</span><br><span class="line">[R2-Serial 1/0]ppp chap user RTB // 配置本地名称</span><br><span class="line"></span><br><span class="line">&lt;R1&gt;debugging ppp chap all</span><br><span class="line">&lt;R1&gt;terminal debugging</span><br></pre></td></tr></table></figure>
+<h3 id="查看路由表"><a href="#查看路由表" class="headerlink" title="查看路由表"></a>查看路由表</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[H3C]display ip routing-table</span><br></pre></td></tr></table></figure>
+<h2 id="OSPF协议"><a href="#OSPF协议" class="headerlink" title="OSPF协议"></a>OSPF协议</h2><h3 id="配置Router-ID"><a href="#配置Router-ID" class="headerlink" title="配置Router ID"></a>配置Router ID</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;H3C&gt;system-view</span><br><span class="line">[H3C]router id 1.1.1.1 // 配置路由器的router id为1.1.1.1</span><br><span class="line">[H3C]undo router id  // 删除router id</span><br></pre></td></tr></table></figure>
+<h3 id="启动OSPF"><a href="#启动OSPF" class="headerlink" title="启动OSPF"></a>启动OSPF</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[R1]router id 1.1.1.1 // 有时候不需要这一步</span><br><span class="line">[R1]ospf // 启动ospf协议进程</span><br><span class="line">[R1]undo ospf // 关闭ospf协议进程 reset ospf all process</span><br><span class="line">[R1-ospf-1]area 0 // 创建area 0区域视图</span><br><span class="line">[R1-ospf-1]undo area 0 // 删除area0</span><br><span class="line">[R1-ospf-1-area-0.0.0.0]network 1.1.1.0 0.0.0.255 // 指定网段运行OSPF协议，最重要, 前面是网段，后面是掩码取反</span><br></pre></td></tr></table></figure>
+<h3 id="显示OSPF调试信息"><a href="#显示OSPF调试信息" class="headerlink" title="显示OSPF调试信息"></a>显示OSPF调试信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;R1&gt;debugging ospf event</span><br><span class="line">&lt;R1&gt;terminal debugging  // 然后断线重连</span><br><span class="line"></span><br><span class="line">&lt;R1&gt;reset ospf all process // 重启ospf进程</span><br></pre></td></tr></table></figure>
+<h3 id="配置回环地址（LoopBack）"><a href="#配置回环地址（LoopBack）" class="headerlink" title="配置回环地址（LoopBack）"></a>配置回环地址（LoopBack）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[h3c]inter loop 1 // 进入loopback1</span><br><span class="line">[h3c-LoopBack1]ip addr 4.4.4.4 32 // 配置ip为4.4.4.4/32</span><br></pre></td></tr></table></figure>
+<h3 id="配置串口（Serial）"><a href="#配置串口（Serial）" class="headerlink" title="配置串口（Serial）"></a>配置串口（Serial）</h3><p>路由器间不能使用以太网口直连，需要使用串口。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R1]interface s 0/0 // 进入串口0/0，e就是serial</span><br><span class="line">[R1-Serial 0/0]ip addr 192.168.1.1 24</span><br></pre></td></tr></table></figure>
+<h3 id="配置OSPF-Cost"><a href="#配置OSPF-Cost" class="headerlink" title="配置OSPF Cost"></a>配置OSPF Cost</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 为VLAN配置ospf cost</span><br><span class="line">[R1]inter vlan 3</span><br><span class="line">[R1-Vlan-Interface3]ospf cost 100 /// 配置ospf cost</span><br><span class="line">// 为端口配置ospf cost</span><br><span class="line">[R1]inter g 0/0</span><br><span class="line">[R1-G..0/0]ospf cost 100 // 配置ospf cost</span><br><span class="line">// 为串口配置ospf cost</span><br><span class="line">[R1]inter s 0/0 // 进入串口</span><br><span class="line">[R1-Serial0/0]ospf cost 200 // 配置ospf cost</span><br></pre></td></tr></table></figure>
+<h3 id="配置缺省路由"><a href="#配置缺省路由" class="headerlink" title="配置缺省路由"></a>配置缺省路由</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[H3C]ip route-static 0.0.0.0 0.0.0.0 129.0.0.1 // 配置缺省路由器为129.0.0.1，和计算机网关的作用类似</span><br><span class="line">第一个0.0.0.0目的网络地址，第二个0.0.0.0目的地址子网掩码，第三个129.0.0.1下一跳地址</span><br></pre></td></tr></table></figure>
+<h3 id="查看OSPF-LSDB（五类LSA如何查看）"><a href="#查看OSPF-LSDB（五类LSA如何查看）" class="headerlink" title="查看OSPF LSDB（五类LSA如何查看）"></a>查看OSPF LSDB（五类LSA如何查看）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">display ospf lsdb # 所有LSA</span><br><span class="line">display ospf lsdb router # 第一类LSA</span><br><span class="line">display ospf lsdb network # 第二类LSA</span><br><span class="line">display ospf lsdb summary # 第三类LSA</span><br><span class="line">display ospf asbr # 第四类LSA，第五类过边界</span><br><span class="line">display ospf ase # 第五类LSA，外部信息注入</span><br></pre></td></tr></table></figure>
+<h3 id="排查故障指令"><a href="#排查故障指令" class="headerlink" title="排查故障指令"></a>排查故障指令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R1]display ospf peer // 查看邻居路由器状态</span><br><span class="line">[R1]reset ospf all // 重启ospf协议</span><br></pre></td></tr></table></figure>
+<h3 id="路由引入（重点中的重点）"><a href="#路由引入（重点中的重点）" class="headerlink" title="路由引入（重点中的重点）"></a>路由引入（重点中的重点）</h3><p>将静态路由或直连路由导入到动态路由协议中，使得其他路由器可以通过动态路由协议学习到这些路由。</p>
+<p>直连路由：路由器的端口与127.0.0.1的连接，端口对应的网段与端口之间的连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[S1-ospf]import-route direct // 引入直连路由</span><br><span class="line">[R1]ip route-static 192.168.5.0 255.255.255.0 192.168.3.2 // 配置静态路由</span><br><span class="line">[R1-ospf]import-route static // 引入静态路由</span><br></pre></td></tr></table></figure>
+<h3 id="tracert"><a href="#tracert" class="headerlink" title="tracert"></a>tracert</h3><p>tracert命令可以追踪经过的路由器路径，验证cost配置的正确性：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tracert &#123;-d&#125; 10.35.3.1 // PC可以使用-d，但是路由器和交换机似乎不支持</span><br></pre></td></tr></table></figure>
+<p>网络设备默认不回应tracert命令，因此需要手动开启：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[S1]ip ttl-expires enable</span><br><span class="line">[S1]ip unreachables enable</span><br></pre></td></tr></table></figure>
+<h3 id="OSPF的五种报文以及其交互过程"><a href="#OSPF的五种报文以及其交互过程" class="headerlink" title="OSPF的五种报文以及其交互过程"></a>OSPF的五种报文以及其交互过程</h3><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/img.png" alt></p>
+<h3 id="路由器和交换机相连是某个网段相连，在这个网段下会选举路由器的接口作为DR，产生三类LSA；而两台路由器之间是点对点连接，无网段，无DR-BDR。"><a href="#路由器和交换机相连是某个网段相连，在这个网段下会选举路由器的接口作为DR，产生三类LSA；而两台路由器之间是点对点连接，无网段，无DR-BDR。" class="headerlink" title="路由器和交换机相连是某个网段相连，在这个网段下会选举路由器的接口作为DR，产生三类LSA；而两台路由器之间是点对点连接，无网段，无DR,BDR。"></a>路由器和交换机相连是某个网段相连，在这个网段下会选举路由器的接口作为DR，产生三类LSA；而两台路由器之间是点对点连接，无网段，无DR,BDR。</h3><p>OSPF状态转移图：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/post/3a21a286/img2.png" alt="img.png"></p>
+<h3 id="BDR和DR选举过程："><a href="#BDR和DR选举过程：" class="headerlink" title="BDR和DR选举过程："></a>BDR和DR选举过程：</h3><p>在全连接网络中，Hello报文交换时选举，每台路由器拥有全部信息，则使用相同的算法就可以选举出DR和BDR。</p>
+<h2 id="BGP实验"><a href="#BGP实验" class="headerlink" title="BGP实验"></a>BGP实验</h2><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/post/3a21a286/img3.png" alt="img.png"></p>
+<h3 id="启动BGP，并配置邻居（以上图为例），注入回环路由信息"><a href="#启动BGP，并配置邻居（以上图为例），注入回环路由信息" class="headerlink" title="启动BGP，并配置邻居（以上图为例），注入回环路由信息"></a>启动BGP，并配置邻居（以上图为例），注入回环路由信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[R1]bgp 100 // 在R1上启动BGP协议，AS号为100（重要）</span><br><span class="line">[R1]undo bgp</span><br><span class="line">[R1-bgp]peer 1.1.1.2 as-number 300 // 配置它的邻居IP，即与它相邻的路由器接口的IP地址与对应的AS号</span><br><span class="line">[R1-bgp]address-family ipv4 unicast // 新版本要进入ipv4使能邻居，考试时必须注意</span><br><span class="line">[R1-bgp-ipv4]peer 1.1.1.2 enable</span><br><span class="line"></span><br><span class="line">[R1]bgp 100 // 进入BGP视图</span><br><span class="line">[R1-bgp]network 5.5.5.5 255.255.255.255 // 注入5.5.5.5/32网段的路由信息，令5.5.5.5通过bgp在不同AS间传播。目的地址，子网掩码</span><br><span class="line">/////////////////////////////////</span><br><span class="line">[S1]bgp 300</span><br><span class="line">[S1-bgp]peer 1.1.1.1 as-number // 其余路由器同理，注意AS与邻居的AS</span><br></pre></td></tr></table></figure>
+<h3 id="强制下一跳为本身接口（next-hop-local）"><a href="#强制下一跳为本身接口（next-hop-local）" class="headerlink" title="强制下一跳为本身接口（next-hop-local）"></a>强制下一跳为本身接口（next-hop-local）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[S1-bgp]peer 3.1.1.2 next-hop-local // 强制下一跳为本身接口</span><br><span class="line">*意思是由s1发出去的bgp信息的下一跳字段，如果是3.1.1.2（即从s2过来的），则改为本地接口*，这是由于在IGP内部没有配置OSPF导致的，如配置了OSPF则无问题</span><br></pre></td></tr></table></figure>
+<p><em>同一网段直接相连的两个接口可通过直连路由产生路由表</em></p>
+<h4 id="BGP协议状态转移"><a href="#BGP协议状态转移" class="headerlink" title="BGP协议状态转移"></a>BGP协议状态转移</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/post/3a21a286/img4.png" alt="img.png"></p>
+<h3 id="查看BGP路由表"><a href="#查看BGP路由表" class="headerlink" title="查看BGP路由表"></a>查看BGP路由表</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[R1-bgp]display bgp routing-table // 查看BGP路由表</span><br></pre></td></tr></table></figure>
+<h3 id="查看BGP邻居状态"><a href="#查看BGP邻居状态" class="headerlink" title="查看BGP邻居状态"></a>查看BGP邻居状态</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[R1]display bgp peer</span><br></pre></td></tr></table></figure>
+<h3 id="debug信息，查看BGP协商过程"><a href="#debug信息，查看BGP协商过程" class="headerlink" title="debug信息，查看BGP协商过程"></a>debug信息，查看BGP协商过程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;R1&gt;debugging bgp event</span><br><span class="line">&lt;R1&gt;terminal debugging</span><br></pre></td></tr></table></figure>
+<h3 id="路由引入"><a href="#路由引入" class="headerlink" title="路由引入"></a>路由引入</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[R1-bgp]import-route direct // 引入直连路由</span><br><span class="line">[R1-bgp]import-route static // 引入直连路由</span><br></pre></td></tr></table></figure>
+<h3 id="BGP路由聚合"><a href="#BGP路由聚合" class="headerlink" title="BGP路由聚合"></a>BGP路由聚合</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[R1]bgp 100</span><br><span class="line">[R1-bgp]aggregate 192.168.0.0 255.255.240.0 //通过具体路由和聚合路由</span><br><span class="line">[R1-bgp]undo aggregate 192.168.0.0 255.255.240.0</span><br><span class="line"></span><br><span class="line">[R1-bgp]aggregate 192.168.0.0 255.255.240.0 detail-supressed // 只通告聚合路由</span><br></pre></td></tr></table></figure>
+<h3 id="路由策略"><a href="#路由策略" class="headerlink" title="路由策略"></a>路由策略</h3><h4 id="基于ACL的路由过滤"><a href="#基于ACL的路由过滤" class="headerlink" title="基于ACL的路由过滤"></a>基于ACL的路由过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[R2]acl number 2001</span><br><span class="line">[R2-acl-basic-2001]rule 0 deny source 5.0.0.0 0.255.255.255 </span><br><span class="line">[R2-acl-basic-2001]rule 1 permit source 0.0.0.0 255.255.255.255</span><br><span class="line">[S2]bgp 300</span><br><span class="line">[S2-bgp]peer 2.1.1.2 filter-policy 2001 export // 配置基于ACL的路由过滤</span><br></pre></td></tr></table></figure>
+<h4 id="配置基于AS-Path的路由过滤"><a href="#配置基于AS-Path的路由过滤" class="headerlink" title="配置基于AS-Path的路由过滤"></a>配置基于AS-Path的路由过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[S1]ip as-path 1 deny \b200$ // 设置拒绝来自AS200的路由</span><br><span class="line">[S1]ip as-path 1 permit ^$ // 设置允许本AS的路由</span><br><span class="line">[S1]bgp 300</span><br><span class="line">[S1-bgp]peer 1.1.1.1 as-path-acl 1 export // 将1.1.1.1接口配置基于AS-Path的路由过滤，即令r1无法收到来自AS200的BGP信息，关键</span><br></pre></td></tr></table></figure>
+<h4 id="配置基于Route-Policy的路由过滤"><a href="#配置基于Route-Policy的路由过滤" class="headerlink" title="配置基于Route Policy的路由过滤"></a>配置基于Route Policy的路由过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[S1]acl number 2001  // number是v7</span><br><span class="line">[S1-acl-basic-2001]rule 1 deny source 6.0.0.0 0.255.255.255</span><br><span class="line">[S1-acl-basic-2001]rule 2 permit source any</span><br><span class="line">[S1-acl-basic-2001]quit</span><br><span class="line">[S1]route-policy deny6 permit node 10 // 配置route-policy内容</span><br><span class="line">[S1-route-policy]if-match ip address acl 2001</span><br><span class="line">[S1-route-policy]apply cost 888</span><br><span class="line">[S1-route-policy]quit</span><br><span class="line">[s1]Bgp 300</span><br><span class="line">[S1-bgp-default]address-family ipv4 unicast</span><br><span class="line">[S1-bgp-default-ipv4]peer 1.1.1.1 route-policy deny6 export</span><br></pre></td></tr></table></figure>
+<h3 id="BGP四种报文"><a href="#BGP四种报文" class="headerlink" title="BGP四种报文"></a>BGP四种报文</h3><p>Open, KeepAlive, Update, Notification</p>
+<h3 id="BGP配置LocalPre和Med"><a href="#BGP配置LocalPre和Med" class="headerlink" title="BGP配置LocalPre和Med"></a>BGP配置LocalPre和Med</h3><p>V5：</p>
+<p>LocalPre: 是一个本地属性，用于在一个自治系统（AS）内部选择最佳路由，默认为100，越大越选择。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[R1-bgp]default local-preference xx</span><br></pre></td></tr></table></figure>
+<p>Med: 是一个用于跨 AS 边界的属性，用来告知相邻 AS 如何选择进入本 AS 的最佳路径。它主要用于在多条进入路径中选择优先级, 默认值为0，越小越选择。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[R1-bgp]default med 10</span><br></pre></td></tr></table></figure>
+<p>V7:</p>
+<p>LocalPre:</p>
+<h3 id="模拟题1"><a href="#模拟题1" class="headerlink" title="模拟题1"></a>模拟题1</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">为使 4.4.4.4 -&gt; 5.5.5.5</span><br><span class="line">[R2]ip route-static 1.x.0.0 255.255.0.0 2.x.1.1</span><br><span class="line">[S2]ip route-static 5.5.5.5 255.255.255.255 3.x.1.1</span><br><span class="line">为使 5.5.5.5 -&gt; 4.4.4.4</span><br><span class="line">[S1]ip route-static 2.x.0.0 255.255.0.0 3.x.1.2</span><br><span class="line">[S2]ip route-static 4.4.4.4 255.255.255.255 2.x.1.2</span><br></pre></td></tr></table></figure>
+<h2 id="复杂组网de坑"><a href="#复杂组网de坑" class="headerlink" title="复杂组网de坑"></a>复杂组网de坑</h2><ol>
+<li><p>将内部全部配好ospf与ibgp，注意边界端口的ip不要引入ospf中。</p>
+</li>
+<li><p>每个路由器/交换机的ospf中都要引入router id</p>
+</li>
+<li>非边界路由器只需配置内部全部peer即可（慢慢敲）</li>
+<li>边界路由器需要做几项工作<ol>
+<li>配置内部全部peer</li>
+<li>配置对端外部peer</li>
+<li>将自己的ospf引入bgp. <strong>import-route ospf 1</strong></li>
+<li>将自己的边界端口对应ip引入bgp</li>
+</ol>
+</li>
+</ol>
+<p>如此可全网互通。</p>
+<ol>
+<li><p>把VRRP配了(未检查，应该不太重要)</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/post/3a21a286/img5.png" alt="img.png"></p>
+</li>
+<li><p>将全网联通 （配置路由器和交换机的指令记录）</p>
+</li>
+<li><p>将路由过滤，只保留192.168的路由</p>
+<p>在边界路由器上配置</p>
+<p><code>[R2]acl number 2001</code><br><code>[R2-acl-basic-2001]rule 0 permit source 192.168.0.0 0.0.255.255</code><br><code>[R2-acl-basic-2001]rule 1 deny source any</code><br><code>[S2]bgp &lt;as号&gt;</code><br><code>[S2-bgp]peer &lt;跨as的peer&gt; filter-policy 2001 export // 配置基于ACL的路由过滤</code></p>
+<p><code>[S2-bgp]peer &lt;跨as的peer&gt; filter-policy 2001 import</code></p>
+</li>
+<li><p>将NAT配置</p>
+</li>
+<li><p>将优选路径配置</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YangYzzzz.github.io">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yangyzzzz.github.io/post/3a21a286.html">https://yangyzzzz.github.io/post/3a21a286.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YangYzzzz.github.io" target="_blank">Yang's CS World</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><a class="post-meta__tags" href="/tags/%E8%AF%BE%E5%86%85%E5%AE%9E%E9%AA%8C/">课内实验</a></div><div class="post_share"><div class="social-share" data-image="/img/fufu4.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/cef0ace1.html" title="『软件工程』EPP小组软工感想"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/116096768_p0_master1200.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">『软件工程』EPP小组软工感想</div></div></a></div><div class="next-post pull-right"><a href="/post/f430acf6.html" title="『学期总结』大三下学期总结"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/bg2.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">『学期总结』大三下学期总结</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/163e301f.html" title="『计算机网络』计算机网络实验——路由协议分析"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/122701887_p0_master1300.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-12</div><div class="title">『计算机网络』计算机网络实验——路由协议分析</div></div></a></div><div><a href="/post/c0060df1.html" title="『计算机网络』计算机网络理论——期末复习"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/122961566_p1_master1200.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-12</div><div class="title">『计算机网络』计算机网络理论——期末复习</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Yang</div><div class="author-info__description">友链请私戳我</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YangYzzzz"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/YangYzzzz" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:21373037@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://blog.csdn.net/weixin_71968907" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">青山依旧在，几度夕阳红</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8E%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E3%80%8F%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%AE%9E%E9%AA%8C%E2%80%94%E2%80%94%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">『计算机网络』计算机网络实验——常用指令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AENAT%EF%BC%88%E5%85%B3%E9%94%AE%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">配置NAT（关键）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E4%BA%8EOSPF%E7%BB%93%E5%90%88%E6%97%B6%EF%BC%8C%E9%9C%80%E8%A6%81%E9%80%9A%E5%91%8A%E9%BB%98%E8%AE%A4%E8%B7%AF%E7%94%B1"><span class="toc-number">1.1.1.</span> <span class="toc-text">当于OSPF结合时，需要通告默认路由</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#VLAN%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82"><span class="toc-number">1.2.</span> <span class="toc-text">VLAN：数据链路层</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VLAN%E7%AB%AF%E5%8F%A3%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.1.</span> <span class="toc-text">VLAN端口分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4VLAN"><span class="toc-number">1.2.2.</span> <span class="toc-text">默认VLAN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E6%A0%87%E7%AD%BE%EF%BC%88tagged%EF%BC%89%E5%92%8C%E4%B8%8D%E5%B8%A6%E6%A0%87%E7%AD%BE%EF%BC%88untagged%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">带标签（tagged）和不带标签（untagged）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAVLAN"><span class="toc-number">1.2.4.</span> <span class="toc-text">创建VLAN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VLAN%E6%B7%BB%E5%8A%A0%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.2.5.</span> <span class="toc-text">VLAN添加端口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A%E7%AB%AF%E5%8F%A3%E7%B1%BB%E5%9E%8B%EF%BC%88trunk%EF%BC%89"><span class="toc-number">1.2.5.1.</span> <span class="toc-text">指定端口类型（trunk）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E5%AE%9A-%E5%88%A0%E9%99%A4Trunk%E7%AB%AF%E5%8F%A3%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E7%9A%84VLAN%E6%95%B0%E6%8D%AE%E5%B8%A7"><span class="toc-number">1.2.5.2.</span> <span class="toc-text">指定&#x2F;删除Trunk端口可以通过的VLAN数据帧</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEVLAN-IP"><span class="toc-number">1.2.6.</span> <span class="toc-text">配置VLAN IP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E4%B8%AA%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.3.</span> <span class="toc-text">三个数据链路层协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PPP%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">PPP协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PAP%E9%AA%8C%E8%AF%81"><span class="toc-number">1.3.2.</span> <span class="toc-text">PAP验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CHAP%E9%AA%8C%E8%AF%81"><span class="toc-number">1.3.3.</span> <span class="toc-text">CHAP验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="toc-number">1.3.4.</span> <span class="toc-text">查看路由表</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OSPF%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.4.</span> <span class="toc-text">OSPF协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AERouter-ID"><span class="toc-number">1.4.1.</span> <span class="toc-text">配置Router ID</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8OSPF"><span class="toc-number">1.4.2.</span> <span class="toc-text">启动OSPF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BAOSPF%E8%B0%83%E8%AF%95%E4%BF%A1%E6%81%AF"><span class="toc-number">1.4.3.</span> <span class="toc-text">显示OSPF调试信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%9B%9E%E7%8E%AF%E5%9C%B0%E5%9D%80%EF%BC%88LoopBack%EF%BC%89"><span class="toc-number">1.4.4.</span> <span class="toc-text">配置回环地址（LoopBack）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%B2%E5%8F%A3%EF%BC%88Serial%EF%BC%89"><span class="toc-number">1.4.5.</span> <span class="toc-text">配置串口（Serial）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEOSPF-Cost"><span class="toc-number">1.4.6.</span> <span class="toc-text">配置OSPF Cost</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BC%BA%E7%9C%81%E8%B7%AF%E7%94%B1"><span class="toc-number">1.4.7.</span> <span class="toc-text">配置缺省路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BOSPF-LSDB%EF%BC%88%E4%BA%94%E7%B1%BBLSA%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%EF%BC%89"><span class="toc-number">1.4.8.</span> <span class="toc-text">查看OSPF LSDB（五类LSA如何查看）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E6%9F%A5%E6%95%85%E9%9A%9C%E6%8C%87%E4%BB%A4"><span class="toc-number">1.4.9.</span> <span class="toc-text">排查故障指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%BC%95%E5%85%A5%EF%BC%88%E9%87%8D%E7%82%B9%E4%B8%AD%E7%9A%84%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-number">1.4.10.</span> <span class="toc-text">路由引入（重点中的重点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tracert"><span class="toc-number">1.4.11.</span> <span class="toc-text">tracert</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OSPF%E7%9A%84%E4%BA%94%E7%A7%8D%E6%8A%A5%E6%96%87%E4%BB%A5%E5%8F%8A%E5%85%B6%E4%BA%A4%E4%BA%92%E8%BF%87%E7%A8%8B"><span class="toc-number">1.4.12.</span> <span class="toc-text">OSPF的五种报文以及其交互过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E5%92%8C%E4%BA%A4%E6%8D%A2%E6%9C%BA%E7%9B%B8%E8%BF%9E%E6%98%AF%E6%9F%90%E4%B8%AA%E7%BD%91%E6%AE%B5%E7%9B%B8%E8%BF%9E%EF%BC%8C%E5%9C%A8%E8%BF%99%E4%B8%AA%E7%BD%91%E6%AE%B5%E4%B8%8B%E4%BC%9A%E9%80%89%E4%B8%BE%E8%B7%AF%E7%94%B1%E5%99%A8%E7%9A%84%E6%8E%A5%E5%8F%A3%E4%BD%9C%E4%B8%BADR%EF%BC%8C%E4%BA%A7%E7%94%9F%E4%B8%89%E7%B1%BBLSA%EF%BC%9B%E8%80%8C%E4%B8%A4%E5%8F%B0%E8%B7%AF%E7%94%B1%E5%99%A8%E4%B9%8B%E9%97%B4%E6%98%AF%E7%82%B9%E5%AF%B9%E7%82%B9%E8%BF%9E%E6%8E%A5%EF%BC%8C%E6%97%A0%E7%BD%91%E6%AE%B5%EF%BC%8C%E6%97%A0DR-BDR%E3%80%82"><span class="toc-number">1.4.13.</span> <span class="toc-text">路由器和交换机相连是某个网段相连，在这个网段下会选举路由器的接口作为DR，产生三类LSA；而两台路由器之间是点对点连接，无网段，无DR,BDR。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDR%E5%92%8CDR%E9%80%89%E4%B8%BE%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="toc-number">1.4.14.</span> <span class="toc-text">BDR和DR选举过程：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BGP%E5%AE%9E%E9%AA%8C"><span class="toc-number">1.5.</span> <span class="toc-text">BGP实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8BGP%EF%BC%8C%E5%B9%B6%E9%85%8D%E7%BD%AE%E9%82%BB%E5%B1%85%EF%BC%88%E4%BB%A5%E4%B8%8A%E5%9B%BE%E4%B8%BA%E4%BE%8B%EF%BC%89%EF%BC%8C%E6%B3%A8%E5%85%A5%E5%9B%9E%E7%8E%AF%E8%B7%AF%E7%94%B1%E4%BF%A1%E6%81%AF"><span class="toc-number">1.5.1.</span> <span class="toc-text">启动BGP，并配置邻居（以上图为例），注入回环路由信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E4%B8%8B%E4%B8%80%E8%B7%B3%E4%B8%BA%E6%9C%AC%E8%BA%AB%E6%8E%A5%E5%8F%A3%EF%BC%88next-hop-local%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">强制下一跳为本身接口（next-hop-local）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BGP%E5%8D%8F%E8%AE%AE%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">BGP协议状态转移</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BBGP%E8%B7%AF%E7%94%B1%E8%A1%A8"><span class="toc-number">1.5.3.</span> <span class="toc-text">查看BGP路由表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BBGP%E9%82%BB%E5%B1%85%E7%8A%B6%E6%80%81"><span class="toc-number">1.5.4.</span> <span class="toc-text">查看BGP邻居状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#debug%E4%BF%A1%E6%81%AF%EF%BC%8C%E6%9F%A5%E7%9C%8BBGP%E5%8D%8F%E5%95%86%E8%BF%87%E7%A8%8B"><span class="toc-number">1.5.5.</span> <span class="toc-text">debug信息，查看BGP协商过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%BC%95%E5%85%A5"><span class="toc-number">1.5.6.</span> <span class="toc-text">路由引入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BGP%E8%B7%AF%E7%94%B1%E8%81%9A%E5%90%88"><span class="toc-number">1.5.7.</span> <span class="toc-text">BGP路由聚合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E7%AD%96%E7%95%A5"><span class="toc-number">1.5.8.</span> <span class="toc-text">路由策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EACL%E7%9A%84%E8%B7%AF%E7%94%B1%E8%BF%87%E6%BB%A4"><span class="toc-number">1.5.8.1.</span> <span class="toc-text">基于ACL的路由过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8EAS-Path%E7%9A%84%E8%B7%AF%E7%94%B1%E8%BF%87%E6%BB%A4"><span class="toc-number">1.5.8.2.</span> <span class="toc-text">配置基于AS-Path的路由过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8ERoute-Policy%E7%9A%84%E8%B7%AF%E7%94%B1%E8%BF%87%E6%BB%A4"><span class="toc-number">1.5.8.3.</span> <span class="toc-text">配置基于Route Policy的路由过滤</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BGP%E5%9B%9B%E7%A7%8D%E6%8A%A5%E6%96%87"><span class="toc-number">1.5.9.</span> <span class="toc-text">BGP四种报文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BGP%E9%85%8D%E7%BD%AELocalPre%E5%92%8CMed"><span class="toc-number">1.5.10.</span> <span class="toc-text">BGP配置LocalPre和Med</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E9%A2%981"><span class="toc-number">1.5.11.</span> <span class="toc-text">模拟题1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E7%BB%84%E7%BD%91de%E5%9D%91"><span class="toc-number">1.6.</span> <span class="toc-text">复杂组网de坑</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123213282_p1_master1400.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记2"/></a><div class="content"><a class="title" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2">『深度学习』动手学深度学习——阅读笔记2</a><time datetime="2025-01-19T13:44:19.349Z" title="发表于 2025-01-19 21:44:19">2025-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780754_p0_master1700.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『信息论』信息论——学习笔记1"/></a><div class="content"><a class="title" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1">『信息论』信息论——学习笔记1</a><time datetime="2024-10-30T09:46:33.000Z" title="发表于 2024-10-30 17:46:33">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记2"/></a><div class="content"><a class="title" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2">『机器学习系统』OpenMLSYS——阅读笔记2</a><time datetime="2024-10-29T12:14:02.000Z" title="发表于 2024-10-29 20:14:02">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记1"/></a><div class="content"><a class="title" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1">『机器学习系统』OpenMLSYS——阅读笔记1</a><time datetime="2024-10-29T12:14:00.000Z" title="发表于 2024-10-29 20:14:00">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123182059_p0_master1200.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记1"/></a><div class="content"><a class="title" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1">『深度学习』动手学深度学习——阅读笔记1</a><time datetime="2024-10-29T10:04:51.000Z" title="发表于 2024-10-29 18:04:51">2024-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Yang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">You are not too early，you are not too late，you are very much on time in your time zone</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: 'Ov23liK7Xv2gk4Mj8hqI',
+      clientSecret: 'a380272ec98afefe58e4fdfacaa66c9eb159e415',
+      repo: 'BlogComment',
+      owner: 'YangYzzzz',
+      admin: ['YangYzzzz'],
+      id: '0de61e7430a5036ff173355b6ec2ea3f',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><div class="aplayer no-destroy" data-id="2108205877" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="true"></script><script>(() => {
+  const isChatBtn = true
+  const isChatHideShow = false
+
+  if (isChatBtn) {
+    const close = () => {
+      Chatra('minimizeWidget')
+      Chatra('hide')
+    }
+
+    const open = () => {
+      Chatra('openChat', true)
+      Chatra('show')
+    }
+
+    window.ChatraSetup = {
+      startHidden: true
+    }
+  
+    window.chatBtnFn = () => {
+      const isShow = document.getElementById('chatra').classList.contains('chatra--expanded')
+      isShow ? close() : open()
+    }
+  } else if (isChatHideShow) {
+    window.chatBtn = {
+      hide: () => {
+        Chatra('hide')
+      },
+      show: () => {
+        Chatra('show')
+      }
+    }
+  }
+
+  (function(d, w, c) {
+    w.ChatraID = 'Xjgb72cDfiFJXzFty'
+    var s = d.createElement('script')
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments)
+    }
+    s.async = true
+    s.src = 'https://call.chatra.io/chatra.js'
+    if (d.head) d.head.appendChild(s)
+  })(document, window, 'Chatra')
+
+})()</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>『操作系统』操作系统实验LAB2——内存管理 | Yang's CS World</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="『操作系统』操作系统实验LAB2——内存管理一. 思考题Question1: 在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS 汇编程序中 lw 和 sw 使用的是虚拟地址，还是物理地址？代码在CPU内执行时得到的都是虚拟地址。  Question2: 从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的 &#x2F;usr&#x2F;include&#x2F;sys&#x2F;queue.h，了解其中单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="『操作系统』操作系统实验LAB2——内存管理">
+<meta property="og:url" content="https://yangyzzzz.github.io/post/89db82dc.html">
+<meta property="og:site_name" content="Yang&#39;s CS World">
+<meta property="og:description" content="『操作系统』操作系统实验LAB2——内存管理一. 思考题Question1: 在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS 汇编程序中 lw 和 sw 使用的是虚拟地址，还是物理地址？代码在CPU内执行时得到的都是虚拟地址。  Question2: 从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的 &#x2F;usr&#x2F;include&#x2F;sys&#x2F;queue.h，了解其中单">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yangyzzzz.github.io/img/fufu3.jpeg">
+<meta property="article:published_time" content="2024-10-08T04:00:11.000Z">
+<meta property="article:modified_time" content="2024-10-08T07:05:07.422Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yangyzzzz.github.io/img/fufu3.jpeg"><link rel="shortcut icon" href="/img/avatar.jpeg"><link rel="canonical" href="https://yangyzzzz.github.io/post/89db82dc.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d431d91edffce9d7bd7ade045956b24b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":5,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10000,"languages":{"author":"作者: Yang","link":"链接: ","source":"来源: Yang's CS World","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '『操作系统』操作系统实验LAB2——内存管理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-08 15:05:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/light.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/windmill.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/fufu3.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="Yang's CS World"></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">『操作系统』操作系统实验LAB2——内存管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-08T04:00:11.000Z" title="发表于 2024-10-08 12:00:11">2024-10-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-08T07:05:07.422Z" title="更新于 2024-10-08 15:05:07">2024-10-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="『操作系统』操作系统实验LAB2——内存管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/89db82dc.html#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="『操作系统』操作系统实验LAB2——内存管理"><a href="#『操作系统』操作系统实验LAB2——内存管理" class="headerlink" title="『操作系统』操作系统实验LAB2——内存管理"></a>『操作系统』操作系统实验LAB2——内存管理</h1><h2 id="一-思考题"><a href="#一-思考题" class="headerlink" title="一. 思考题"></a>一. 思考题</h2><h4 id="Question1-在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS-汇编程序中-lw-和-sw-使用的是虚拟地址，还是物理地址？"><a href="#Question1-在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS-汇编程序中-lw-和-sw-使用的是虚拟地址，还是物理地址？" class="headerlink" title="Question1: 在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS 汇编程序中 lw 和 sw 使用的是虚拟地址，还是物理地址？"></a>Question1: 在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS 汇编程序中 lw 和 sw 使用的是虚拟地址，还是物理地址？</h4><p>代码在CPU内执行时得到的都是虚拟地址。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008144332608.png" alt></p>
+<h4 id="Question2-从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的-usr-include-sys-queue-h，了解其中单向链表与循环链表的实现，比较它们与本实验中使用的双向链表，分析三者在插入与删除操作上的性能差异。"><a href="#Question2-从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的-usr-include-sys-queue-h，了解其中单向链表与循环链表的实现，比较它们与本实验中使用的双向链表，分析三者在插入与删除操作上的性能差异。" class="headerlink" title="Question2: 从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的 /usr/include/sys/queue.h，了解其中单向链表与循环链表的实现，比较它们与本实验中使用的双向链表，分析三者在插入与删除操作上的性能差异。"></a>Question2: 从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的 /usr/include/sys/queue.h，了解其中单向链表与循环链表的实现，比较它们与本实验中使用的双向链表，分析三者在插入与删除操作上的性能差异。</h4><p>用宏实现链表，主要是可以模拟出C语言不具有的泛型功能。因为宏的实现方式是字符串替换，替换时不会考虑到语法等等问题，因此只要给好参数，则任何结构体的链表均能由一组宏统一实现，简单便捷。</p>
+<p><strong>插入操作(考虑先寻找，再插入)</strong></p>
+<ul>
+<li><p>双向链表:头部插入O(1)，尾部插入O(n)，指定节点前O(1)，指定节点后O(1)</p>
+</li>
+<li><p>单向链表:头部插入O(1)，尾部插入O(n)，指定节点前O(n)，指定节点后O(1)</p>
+</li>
+<li><p>双向循环链表:头部插入O(1)，尾部插入O(1)，指定节点前O(1，指定节点后O(1)</p>
+</li>
+</ul>
+<p><strong>删除操作:</strong></p>
+<ul>
+<li><p>双向链表：头部节点删除O(1)，尾部节点删除O(n)，指定节点删除O(1)</p>
+</li>
+<li><p>单向链表: 头部节点删除O(1)，尾部节点删除O(n)，指定节点删除O(n)</p>
+</li>
+<li><p>双向循环链表: 头部节点删除O(1)，尾部节点删除O(1)，指定节点删除O(1)</p>
+</li>
+</ul>
+<h4 id="Question3-请阅读-include-queue-h-以及-include-pmap-h-将-Page-list-的结构梳理清楚，选择正确的展开结构。"><a href="#Question3-请阅读-include-queue-h-以及-include-pmap-h-将-Page-list-的结构梳理清楚，选择正确的展开结构。" class="headerlink" title="Question3: 请阅读 include/queue.h 以及 include/pmap.h, 将 Page_list 的结构梳理清楚，选择正确的展开结构。"></a>Question3: 请阅读 include/queue.h 以及 include/pmap.h, 将 Page_list 的结构梳理清楚，选择正确的展开结构。</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008144556916.png" alt></p>
+<p>选C，Page_list是Page结构体的头指针，里面包含一个指向Page结构体的指针即lh_first，Page结构体由引用次数pp_ref和链表项pp_link组成，故选C。</p>
+<h4 id="Question4-请阅读上面有关-R3000-TLB-的描述，从虚拟内存的实现角度，阐述-ASID-的必要性。请阅读《IDT-R30xx-Family-Software-Reference-Manual》的-Chapter-6，结合-ASID段的位数，说明-R3000-中可容纳不同的地址空间的最大数量。"><a href="#Question4-请阅读上面有关-R3000-TLB-的描述，从虚拟内存的实现角度，阐述-ASID-的必要性。请阅读《IDT-R30xx-Family-Software-Reference-Manual》的-Chapter-6，结合-ASID段的位数，说明-R3000-中可容纳不同的地址空间的最大数量。" class="headerlink" title="Question4: 请阅读上面有关 R3000-TLB 的描述，从虚拟内存的实现角度，阐述 ASID 的必要性。请阅读《IDT R30xx Family Software Reference Manual》的 Chapter 6，结合 ASID段的位数，说明 R3000 中可容纳不同的地址空间的最大数量。"></a>Question4: 请阅读上面有关 R3000-TLB 的描述，从虚拟内存的实现角度，阐述 ASID 的必要性。请阅读《IDT R30xx Family Software Reference Manual》的 Chapter 6，结合 ASID段的位数，说明 R3000 中可容纳不同的地址空间的最大数量。</h4><p>ASID称作是地址空间，每个用户进程有一个专属的ASID码，用来区分不同进程。由于每个进程都有自己的虚拟地址空间且相同，在MIPS上都是0-4G,因此进程间会使用到相同的虚拟地址，但实际上他们对应的是不同的物理地址，若此刻不增加标志位来区分不同进程，TLB便分不出来不同的进程，出现严重错误，当然也可以每切换一次进程刷新所有TLB重新装填，但是这样效率会大大降低。</p>
+<p>ASID共六位，一共最多容纳64个地址空间。</p>
+<h4 id="Question5-tlb-invalidate-和-tlb-out-的调用关系？请用一句话概括-tlb-invalidate-的作用。逐行解释-tlb-out-中的汇编代码。"><a href="#Question5-tlb-invalidate-和-tlb-out-的调用关系？请用一句话概括-tlb-invalidate-的作用。逐行解释-tlb-out-中的汇编代码。" class="headerlink" title="Question5: tlb_invalidate 和 tlb_out 的调用关系？请用一句话概括 tlb_invalidate 的作用。逐行解释 tlb_out 中的汇编代码。"></a>Question5: tlb_invalidate 和 tlb_out 的调用关系？请用一句话概括 tlb_invalidate 的作用。逐行解释 tlb_out 中的汇编代码。</h4><p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008144652707.png" alt></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008144657722.png" alt></p>
+<p>tlb_out 被 tlb_invalidate 调用，tlb_invalidate的作用是删除特定ASID码的虚拟地址在 TLB 中的旧表项。</p>
+<p>PTE_ADDR作用是清空va虚拟地址后十二位偏移位，接着与位移到6到11位的ASID码进行拼接，生成TLB的Key部分，如下图。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008144740612.png" alt></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008144816947.png" alt></p>
+<p>结合相关指令,按行解读tlb_out代码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mfc0  t0, CP0_ENTRYHI <span class="comment"># 将原EntryHi寄存器内容取出</span></span><br><span class="line">mtc0  a0, CP0_ENTRYHI <span class="comment"># 将tlb_invalidate向其传递的参数a0(这一步在编译器种执行)写进EntryHi寄存器</span></span><br><span class="line">tlbp <span class="comment"># 根据EntryHi中的Key查找对应的Value，并将查到的表项索引存入Index寄存器</span></span><br><span class="line">mfc0  t1, CP0_INDEX <span class="comment"># 将Index寄存器值存入t1寄存器</span></span><br><span class="line">bltz  t1, NO_SUCH_ENTRY <span class="comment"># 判断t1是否为负数，若为负数，意味着无对应表项，也就不需要清空，跳转到NO_SUCH_ENTRY。若不为负数，意味着查到表项，继续执行。</span></span><br><span class="line">mtc0  zero, CP0_ENTRYHI <span class="comment"># 将EntryHi清空</span></span><br><span class="line">mtc0  zero, CP0_ENTRYLO0 <span class="comment"># 将EntryLow清空</span></span><br><span class="line">tlbwi <span class="comment"># 根据上面Index查到的索引，用清空后的Hi和Low对相应表项清空，完成表项无效化操作。</span></span><br></pre></td></tr></table></figure>
+<h4 id="Question6-在现代的-64-位系统中，提供了-64-位的字长，但实际上不是-64-位页式存储系统。假设在-64-位系统中采用三级页表机制，页面大小-4KB。由于-64-位系统中字长为8B，且页目录也占用一页，因此页目录中有-512-个页目录项，因此每级页表都需要-9-位。因此在-64-位系统下，总共需要-3-×-9-12-39-位就可以实现三级页表机制，并不需要-64位。现考虑上述-39-位的三级页式存储系统，虚拟地址空间为-512-GB，若三级页表的基地址为-PTbase，请计算："><a href="#Question6-在现代的-64-位系统中，提供了-64-位的字长，但实际上不是-64-位页式存储系统。假设在-64-位系统中采用三级页表机制，页面大小-4KB。由于-64-位系统中字长为8B，且页目录也占用一页，因此页目录中有-512-个页目录项，因此每级页表都需要-9-位。因此在-64-位系统下，总共需要-3-×-9-12-39-位就可以实现三级页表机制，并不需要-64位。现考虑上述-39-位的三级页式存储系统，虚拟地址空间为-512-GB，若三级页表的基地址为-PTbase，请计算：" class="headerlink" title="Question6: 在现代的 64 位系统中，提供了 64 位的字长，但实际上不是 64 位页式存储系统。假设在 64 位系统中采用三级页表机制，页面大小 4KB。由于 64 位系统中字长为8B，且页目录也占用一页，因此页目录中有 512 个页目录项，因此每级页表都需要 9 位。因此在 64 位系统下，总共需要 3 × 9 + 12 = 39 位就可以实现三级页表机制，并不需要 64位。现考虑上述 39 位的三级页式存储系统，虚拟地址空间为 512 GB，若三级页表的基地址为 PTbase，请计算："></a>Question6: 在现代的 64 位系统中，提供了 64 位的字长，但实际上不是 64 位页式存储系统。假设在 64 位系统中采用三级页表机制，页面大小 4KB。由于 64 位系统中字长为8B，且页目录也占用一页，因此页目录中有 512 个页目录项，因此每级页表都需要 9 位。因此在 64 位系统下，总共需要 3 × 9 + 12 = 39 位就可以实现三级页表机制，并不需要 64位。现考虑上述 39 位的三级页式存储系统，虚拟地址空间为 512 GB，若三级页表的基地址为 PTbase，请计算：</h4><p>• 三级页表页目录的基地址。<br>• 映射到页目录自身的页目录项（自映射）。</p>
+<p>首先正如二级页表结构里页目录的自映射一样，三级页表结构中，512张二级页表一定有一张正是一级页表，而每张二级页表对应的512张三级页表也一定有一张正是二级页表，因此总共有$512<em>512</em>512=128M$页表项，每个页表项对应着4KB大小的页面，共512GB。</p>
+<p>三级映射要经历三步。PTbase对应的⻚表项是第$PTbase&gt;&gt;12$个，⽽每个⻚表有512个⻚⽬录项，每个⻚表项的⼤⼩是8B（⻚⾯⼤⼩ 4KB，有512个⻚表项），所以PTbase在三级⻚表区中对应的偏移量是$PTbase&gt;&gt;9$。记作⼆级⻚表项基地址。</p>
+<p>然后，三级⻚表区（1G）映射到⼆级⻚表区（$512*512=256K$个8B⻚表项，共2M⼤⼩）。每个⻚表项映射了4K的空间，则⼆级⻚表区基地址对应的⻚表项是第$(PTbase&gt;&gt;9)&gt;&gt;12$个，所以⼆级⻚表区基地址在⼆级⻚表区中对应的偏移量是$(PTbase&gt;&gt;9)&gt;&gt;9$。记作⼀级⻚表基地址。 </p>
+<p>最后，⼆级⻚表区（2M）映射到⼀级⻚表（512个8B⻚表项，4K⼤⼩）。每个⻚表项映射了4K的空间，则⼀级⻚表基地址对应的⻚表项是第$(PTbase&gt;&gt;18)&gt;&gt;12$个，所以⼀级⻚表基地址在⼀级⻚表⾃⾝中对应的偏移量是$(PTbase&gt;&gt;18)&gt;&gt;9$。 </p>
+<p>那么，三级⻚表⻚⽬录（即⼀级⻚表）的基地址为 $PTbase + (PTbase&gt;&gt;9) + (PTbase&gt;&gt;18) $;</p>
+<p>映射到⻚⽬录⾃⾝的⻚⽬录项是 $PTbase + (PTbase&gt;&gt;9) + (PTbase&gt;&gt;18) + (PTbase&gt;&gt;27)$</p>
+<h4 id="Question7-简单了解并叙述-X86-体系结构中的内存管理机制，比较-X86-和-MIPS-在内存管理上的区别。"><a href="#Question7-简单了解并叙述-X86-体系结构中的内存管理机制，比较-X86-和-MIPS-在内存管理上的区别。" class="headerlink" title="Question7: 简单了解并叙述 X86 体系结构中的内存管理机制，比较 X86 和 MIPS 在内存管理上的区别。"></a>Question7: 简单了解并叙述 X86 体系结构中的内存管理机制，比较 X86 和 MIPS 在内存管理上的区别。</h4><p>x86架构的内存管理机制分为两部分：分段机制和分⻚机制。 而Mips架构是单纯的分页机制。</p>
+<p>分段机制为程序提供彼此隔离的代码区域、数据区域、栈区域，从⽽避免了同⼀个处理器上运⾏的多个程序互相影响。分⻚机制实现了传统的按需分⻚、虚拟内存机制，可以将程序的执⾏环境按需映射到物理内存。此外，分⻚机制还可以⽤于提供多任务的隔离。X86处理器⽆论在何种运⾏模式下都不可以禁⽌分段机制，但是分⻚机制却是可选选项。</p>
+<p>针对分段机制而言，分段相当于完成了虚拟地址到线性地址的转化，x86架构提供了两种段描述符表：<strong>GDT</strong>（全局段描述符表Global Descriptor Table）和<strong>LDT</strong> （本地段描述符表Local Descriptor Table）。其中GDT描述系统段，包括操作系统本⾝；LDT描述局部于每个系统的段，包括其代码、数据、堆栈等，可以将GDT当作一级段表，LDT看作二级段表。当需要访问一个段时，需要将该段的选择子装进段寄存器中，对应的描述符从GDT或LDT取出。</p>
+<p>若开启分页机制，则将得到的线性地址解释成页目录偏移+二级页表偏移+页内偏移，像是纯分页机制中的“虚拟地址”继续通过页表得到实际地址。若不开启分页机制，则得到的线性地址就是物理地址。</p>
+<h2 id="二-实验难点"><a href="#二-实验难点" class="headerlink" title="二. 实验难点"></a>二. 实验难点</h2><p>本次实验重点在于对内存管理机制的初始化工作，对物理内存分页，并对页面实现申请与删除，并完成了一些与页表相关的函数。我认为pmap.c中页表函数是本次实验的难点，接下来我将依次梳理一下各个函数的用途与实现思路，并总结这些函数搭配使用产生的最终效果。</p>
+<p>首先是物理页面的创建与构建空闲页面双向链表，难点在于链表宏的实现，需要用到数据结构的相关知识，前插后插需要分四步，每一步的顺序至关重要，以后插为例，elm为待插入元素，listelm为当前元素，先判断listelm后是否还有元素，若无则直接尾插即可，若有则如下图四步执行(画的略难看)，特别要注意指针的指针存的是指针的地址，即le_prev存的是le_next的地址，应使用le_prev = &amp;le_next。在构建页面时应按Page结构体物理地址从低到高与对应的物理页面地址从低到高对应。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008145312074.png" alt></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008150409743.png" alt></p>
+<p>接下来是对几个页表函数的理解。</p>
+<p><strong>Page_walk</strong>：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008145436746.png" alt></p>
+<p>给定虚拟地址，查找页目录，若能查到相应的二级页表，将va 虚拟地址所在的二级页表项的指针存储在 ppte 指向的空间上，若没查到，则建立二级页表，完成对页表页面的初始化，即引用次数置为1，后续操作同。</p>
+<p><strong>Page_insert</strong>：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008145459210.png" alt></p>
+<p>将一级页表基地址 pgdir 对应的两级页表结构中虚拟地址 va 映射到页控制块 pp 对应的物理页面，若va在页表中无相应二级页表则使用page_walk创建，若va在二级页表中对应的物理页面跟本次设置的不同，则需要清空tlb并重写二级页表，最后将对应的物理页面号填到二级页表当中，并设置权限。</p>
+<p><strong>Page_look</strong>:</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/image-20241008145510157.png" alt></p>
+<p>作用是返回一级页表基地址 pgdir 对应的两级页表结构中虚拟地址 va 映射的物理页面的页控制块，同时将 ppte 指向的空间设为对应的二级页表项地址,若无则返回null，主要是用来配合tlb重填函数。</p>
+<p>这一切的一切当发生缺页异常时，OS将执行如下步骤。</p>
+<ol>
+<li>从 BadVAddr 中取出引发 TLB 缺失的虚拟地址。</li>
+<li>从 EntryHi 的6–11 位取出当前进程的 ASID。</li>
+<li>以虚拟地址和 ASID 为参数，调用 _do_tlb_refill 函数。该函数是 TLB 重填过程的核心，其功能是根据虚拟地址和 ASID 使用look函数查找页表，若查找不到则会利用页面申请函数来申请一个物理页面，并使用insert函数将物理页面号存入页表之中，在insert和look的过程中又会调用walk函数查找二级页表项存不存在，直至look函数返回不为null。</li>
+<li>将物理地址存入 EntryLo , 并执行 tlbwr 将此时的 EntryHi 与 EntryLo 写入到 TLB 中。</li>
+</ol>
+<p>以上函数间的调用关系便非常清晰明了，且我们发现这些页表函数<strong>统一服务于tlb重填操作</strong>，在重填的操作过程中，完成了页表的建立。</p>
+<h2 id="三-实验感受"><a href="#三-实验感受" class="headerlink" title="三. 实验感受"></a>三. 实验感受</h2><p>在Lab2中，我们首次接触到了如此大型的程序，头文件C文件汇编文件应有尽有无一缺席，各种文件之间的配合也是令人眼花缭乱。在笔者拿到之初，一度无从下手，令人不禁翻看往届学长的代码，不过最后及时收手，想着还是自己先挑战挑战。最让人记忆犹新的是写page_walk，page_insert那个夜晚，因为create的逻辑问题，debug一度de到破防，甚至在怀疑是不是真出现了以前Lab写错的情况发生，de到在主楼沙发上撒泼打滚，好在我的朋友乐于助人，在一个个文件的来回切换中，最终锁定了问题，当时已然临近11点。好在第三部分的内容简单，Lab2实验部分在高潮之后很快便迎来尾声。不过想要理清内存管理的逻辑有些困难，想必有许多同学在写代码时只是单纯的根据提示去写，没有思考内在的逻辑，笔者也是在之后又继续翻阅指导书与代码才大致弄清逻辑。</p>
+<p>总的来说本次实验是一次具有挑战感与收获感的实验，随着一遍遍阅读内核代码，笔者对于OS的原理也是愈发清晰，也愈发明白为什么说写OS的程序员都是最优秀的程序员了。</p>
+<p><strong>Lab3冲冲冲！</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YangYzzzz.github.io">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yangyzzzz.github.io/post/89db82dc.html">https://yangyzzzz.github.io/post/89db82dc.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YangYzzzz.github.io" target="_blank">Yang's CS World</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></div><div class="post_share"><div class="social-share" data-image="/img/fufu3.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/9af66719.html" title="『操作系统』操作系统实验LAB3——进程管理"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/121382480_p0_master1200.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">『操作系统』操作系统实验LAB3——进程管理</div></div></a></div><div class="next-post pull-right"><a href="/post/50536630.html" title="『操作系统』操作系统实验LAB1——ELF文件,Printk"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119312426_p0_master1700.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">『操作系统』操作系统实验LAB1——ELF文件,Printk</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/b799ff9.html" title="『操作系统』操作系统第六次理论作业"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780754_p0_master1700.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-08</div><div class="title">『操作系统』操作系统第六次理论作业</div></div></a></div><div><a href="/post/3738fa77.html" title="『操作系统』操作系统第五次理论作业"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123182059_p0_master1200.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-08</div><div class="title">『操作系统』操作系统第五次理论作业</div></div></a></div><div><a href="/post/5d68e32d.html" title="『操作系统』操作系统实验LAB2附——页表自映射"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu2.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-08</div><div class="title">『操作系统』操作系统实验LAB2附——页表自映射</div></div></a></div><div><a href="/post/318802fe.html" title="『操作系统』操作系统实验LAB6 Challenge"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119312426_p0_master1700.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-08</div><div class="title">『操作系统』操作系统实验LAB6 Challenge</div></div></a></div><div><a href="/post/4f174a3f.html" title="『操作系统』操作系统实验LAB6——管道与Shell"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/106505220_p0_master1800.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-08</div><div class="title">『操作系统』操作系统实验LAB6——管道与Shell</div></div></a></div><div><a href="/post/9c179b0b.html" title="『操作系统』操作系统实验LAB5——文件系统与外存"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123213282_p1_master1400.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-08</div><div class="title">『操作系统』操作系统实验LAB5——文件系统与外存</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Yang</div><div class="author-info__description">友链请私戳我</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YangYzzzz"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/YangYzzzz" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:21373037@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://blog.csdn.net/weixin_71968907" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">青山依旧在，几度夕阳红</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8E%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E3%80%8F%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8CLAB2%E2%80%94%E2%80%94%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">『操作系统』操作系统实验LAB2——内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E6%80%9D%E8%80%83%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">一. 思考题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Question1-%E5%9C%A8%E7%BC%96%E5%86%99%E7%9A%84C%E7%A8%8B%E5%BA%8F%E4%B8%AD%EF%BC%8C%E6%8C%87%E9%92%88%E5%8F%98%E9%87%8F%E4%B8%AD%E5%AD%98%E5%82%A8%E7%9A%84%E5%9C%B0%E5%9D%80%E6%98%AF%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%EF%BC%8C%E8%BF%98%E6%98%AF%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%EF%BC%9FMIPS-%E6%B1%87%E7%BC%96%E7%A8%8B%E5%BA%8F%E4%B8%AD-lw-%E5%92%8C-sw-%E4%BD%BF%E7%94%A8%E7%9A%84%E6%98%AF%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%EF%BC%8C%E8%BF%98%E6%98%AF%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%EF%BC%9F"><span class="toc-number">1.1.0.1.</span> <span class="toc-text">Question1: 在编写的C程序中，指针变量中存储的地址是虚拟地址，还是物理地址？MIPS 汇编程序中 lw 和 sw 使用的是虚拟地址，还是物理地址？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Question2-%E4%BB%8E%E5%8F%AF%E9%87%8D%E7%94%A8%E6%80%A7%E7%9A%84%E8%A7%92%E5%BA%A6%EF%BC%8C%E9%98%90%E8%BF%B0%E7%94%A8%E5%AE%8F%E6%9D%A5%E5%AE%9E%E7%8E%B0%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A5%BD%E5%A4%84%E3%80%82%E6%9F%A5%E7%9C%8B%E5%AE%9E%E9%AA%8C%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84-usr-include-sys-queue-h%EF%BC%8C%E4%BA%86%E8%A7%A3%E5%85%B6%E4%B8%AD%E5%8D%95%E5%90%91%E9%93%BE%E8%A1%A8%E4%B8%8E%E5%BE%AA%E7%8E%AF%E9%93%BE%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0%EF%BC%8C%E6%AF%94%E8%BE%83%E5%AE%83%E4%BB%AC%E4%B8%8E%E6%9C%AC%E5%AE%9E%E9%AA%8C%E4%B8%AD%E4%BD%BF%E7%94%A8%E7%9A%84%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8%EF%BC%8C%E5%88%86%E6%9E%90%E4%B8%89%E8%80%85%E5%9C%A8%E6%8F%92%E5%85%A5%E4%B8%8E%E5%88%A0%E9%99%A4%E6%93%8D%E4%BD%9C%E4%B8%8A%E7%9A%84%E6%80%A7%E8%83%BD%E5%B7%AE%E5%BC%82%E3%80%82"><span class="toc-number">1.1.0.2.</span> <span class="toc-text">Question2: 从可重用性的角度，阐述用宏来实现链表的好处。查看实验环境中的 &#x2F;usr&#x2F;include&#x2F;sys&#x2F;queue.h，了解其中单向链表与循环链表的实现，比较它们与本实验中使用的双向链表，分析三者在插入与删除操作上的性能差异。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Question3-%E8%AF%B7%E9%98%85%E8%AF%BB-include-queue-h-%E4%BB%A5%E5%8F%8A-include-pmap-h-%E5%B0%86-Page-list-%E7%9A%84%E7%BB%93%E6%9E%84%E6%A2%B3%E7%90%86%E6%B8%85%E6%A5%9A%EF%BC%8C%E9%80%89%E6%8B%A9%E6%AD%A3%E7%A1%AE%E7%9A%84%E5%B1%95%E5%BC%80%E7%BB%93%E6%9E%84%E3%80%82"><span class="toc-number">1.1.0.3.</span> <span class="toc-text">Question3: 请阅读 include&#x2F;queue.h 以及 include&#x2F;pmap.h, 将 Page_list 的结构梳理清楚，选择正确的展开结构。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Question4-%E8%AF%B7%E9%98%85%E8%AF%BB%E4%B8%8A%E9%9D%A2%E6%9C%89%E5%85%B3-R3000-TLB-%E7%9A%84%E6%8F%8F%E8%BF%B0%EF%BC%8C%E4%BB%8E%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E7%9A%84%E5%AE%9E%E7%8E%B0%E8%A7%92%E5%BA%A6%EF%BC%8C%E9%98%90%E8%BF%B0-ASID-%E7%9A%84%E5%BF%85%E8%A6%81%E6%80%A7%E3%80%82%E8%AF%B7%E9%98%85%E8%AF%BB%E3%80%8AIDT-R30xx-Family-Software-Reference-Manual%E3%80%8B%E7%9A%84-Chapter-6%EF%BC%8C%E7%BB%93%E5%90%88-ASID%E6%AE%B5%E7%9A%84%E4%BD%8D%E6%95%B0%EF%BC%8C%E8%AF%B4%E6%98%8E-R3000-%E4%B8%AD%E5%8F%AF%E5%AE%B9%E7%BA%B3%E4%B8%8D%E5%90%8C%E7%9A%84%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E7%9A%84%E6%9C%80%E5%A4%A7%E6%95%B0%E9%87%8F%E3%80%82"><span class="toc-number">1.1.0.4.</span> <span class="toc-text">Question4: 请阅读上面有关 R3000-TLB 的描述，从虚拟内存的实现角度，阐述 ASID 的必要性。请阅读《IDT R30xx Family Software Reference Manual》的 Chapter 6，结合 ASID段的位数，说明 R3000 中可容纳不同的地址空间的最大数量。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Question5-tlb-invalidate-%E5%92%8C-tlb-out-%E7%9A%84%E8%B0%83%E7%94%A8%E5%85%B3%E7%B3%BB%EF%BC%9F%E8%AF%B7%E7%94%A8%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%A6%82%E6%8B%AC-tlb-invalidate-%E7%9A%84%E4%BD%9C%E7%94%A8%E3%80%82%E9%80%90%E8%A1%8C%E8%A7%A3%E9%87%8A-tlb-out-%E4%B8%AD%E7%9A%84%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E3%80%82"><span class="toc-number">1.1.0.5.</span> <span class="toc-text">Question5: tlb_invalidate 和 tlb_out 的调用关系？请用一句话概括 tlb_invalidate 的作用。逐行解释 tlb_out 中的汇编代码。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Question6-%E5%9C%A8%E7%8E%B0%E4%BB%A3%E7%9A%84-64-%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%EF%BC%8C%E6%8F%90%E4%BE%9B%E4%BA%86-64-%E4%BD%8D%E7%9A%84%E5%AD%97%E9%95%BF%EF%BC%8C%E4%BD%86%E5%AE%9E%E9%99%85%E4%B8%8A%E4%B8%8D%E6%98%AF-64-%E4%BD%8D%E9%A1%B5%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%E3%80%82%E5%81%87%E8%AE%BE%E5%9C%A8-64-%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%E9%87%87%E7%94%A8%E4%B8%89%E7%BA%A7%E9%A1%B5%E8%A1%A8%E6%9C%BA%E5%88%B6%EF%BC%8C%E9%A1%B5%E9%9D%A2%E5%A4%A7%E5%B0%8F-4KB%E3%80%82%E7%94%B1%E4%BA%8E-64-%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%AD%97%E9%95%BF%E4%B8%BA8B%EF%BC%8C%E4%B8%94%E9%A1%B5%E7%9B%AE%E5%BD%95%E4%B9%9F%E5%8D%A0%E7%94%A8%E4%B8%80%E9%A1%B5%EF%BC%8C%E5%9B%A0%E6%AD%A4%E9%A1%B5%E7%9B%AE%E5%BD%95%E4%B8%AD%E6%9C%89-512-%E4%B8%AA%E9%A1%B5%E7%9B%AE%E5%BD%95%E9%A1%B9%EF%BC%8C%E5%9B%A0%E6%AD%A4%E6%AF%8F%E7%BA%A7%E9%A1%B5%E8%A1%A8%E9%83%BD%E9%9C%80%E8%A6%81-9-%E4%BD%8D%E3%80%82%E5%9B%A0%E6%AD%A4%E5%9C%A8-64-%E4%BD%8D%E7%B3%BB%E7%BB%9F%E4%B8%8B%EF%BC%8C%E6%80%BB%E5%85%B1%E9%9C%80%E8%A6%81-3-%C3%97-9-12-39-%E4%BD%8D%E5%B0%B1%E5%8F%AF%E4%BB%A5%E5%AE%9E%E7%8E%B0%E4%B8%89%E7%BA%A7%E9%A1%B5%E8%A1%A8%E6%9C%BA%E5%88%B6%EF%BC%8C%E5%B9%B6%E4%B8%8D%E9%9C%80%E8%A6%81-64%E4%BD%8D%E3%80%82%E7%8E%B0%E8%80%83%E8%99%91%E4%B8%8A%E8%BF%B0-39-%E4%BD%8D%E7%9A%84%E4%B8%89%E7%BA%A7%E9%A1%B5%E5%BC%8F%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F%EF%BC%8C%E8%99%9A%E6%8B%9F%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4%E4%B8%BA-512-GB%EF%BC%8C%E8%8B%A5%E4%B8%89%E7%BA%A7%E9%A1%B5%E8%A1%A8%E7%9A%84%E5%9F%BA%E5%9C%B0%E5%9D%80%E4%B8%BA-PTbase%EF%BC%8C%E8%AF%B7%E8%AE%A1%E7%AE%97%EF%BC%9A"><span class="toc-number">1.1.0.6.</span> <span class="toc-text">Question6: 在现代的 64 位系统中，提供了 64 位的字长，但实际上不是 64 位页式存储系统。假设在 64 位系统中采用三级页表机制，页面大小 4KB。由于 64 位系统中字长为8B，且页目录也占用一页，因此页目录中有 512 个页目录项，因此每级页表都需要 9 位。因此在 64 位系统下，总共需要 3 × 9 + 12 &#x3D; 39 位就可以实现三级页表机制，并不需要 64位。现考虑上述 39 位的三级页式存储系统，虚拟地址空间为 512 GB，若三级页表的基地址为 PTbase，请计算：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Question7-%E7%AE%80%E5%8D%95%E4%BA%86%E8%A7%A3%E5%B9%B6%E5%8F%99%E8%BF%B0-X86-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6%EF%BC%8C%E6%AF%94%E8%BE%83-X86-%E5%92%8C-MIPS-%E5%9C%A8%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E4%B8%8A%E7%9A%84%E5%8C%BA%E5%88%AB%E3%80%82"><span class="toc-number">1.1.0.7.</span> <span class="toc-text">Question7: 简单了解并叙述 X86 体系结构中的内存管理机制，比较 X86 和 MIPS 在内存管理上的区别。</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E5%AE%9E%E9%AA%8C%E9%9A%BE%E7%82%B9"><span class="toc-number">1.2.</span> <span class="toc-text">二. 实验难点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E5%AE%9E%E9%AA%8C%E6%84%9F%E5%8F%97"><span class="toc-number">1.3.</span> <span class="toc-text">三. 实验感受</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123213282_p1_master1400.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记2"/></a><div class="content"><a class="title" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2">『深度学习』动手学深度学习——阅读笔记2</a><time datetime="2025-01-19T13:44:19.349Z" title="发表于 2025-01-19 21:44:19">2025-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780754_p0_master1700.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『信息论』信息论——学习笔记1"/></a><div class="content"><a class="title" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1">『信息论』信息论——学习笔记1</a><time datetime="2024-10-30T09:46:33.000Z" title="发表于 2024-10-30 17:46:33">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记2"/></a><div class="content"><a class="title" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2">『机器学习系统』OpenMLSYS——阅读笔记2</a><time datetime="2024-10-29T12:14:02.000Z" title="发表于 2024-10-29 20:14:02">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记1"/></a><div class="content"><a class="title" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1">『机器学习系统』OpenMLSYS——阅读笔记1</a><time datetime="2024-10-29T12:14:00.000Z" title="发表于 2024-10-29 20:14:00">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123182059_p0_master1200.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记1"/></a><div class="content"><a class="title" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1">『深度学习』动手学深度学习——阅读笔记1</a><time datetime="2024-10-29T10:04:51.000Z" title="发表于 2024-10-29 18:04:51">2024-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Yang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">You are not too early，you are not too late，you are very much on time in your time zone</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: 'Ov23liK7Xv2gk4Mj8hqI',
+      clientSecret: 'a380272ec98afefe58e4fdfacaa66c9eb159e415',
+      repo: 'BlogComment',
+      owner: 'YangYzzzz',
+      admin: ['YangYzzzz'],
+      id: 'c8b2600a54045c13482a272dbcb4d9a7',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><div class="aplayer no-destroy" data-id="2108205877" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="true"></script><script>(() => {
+  const isChatBtn = true
+  const isChatHideShow = false
+
+  if (isChatBtn) {
+    const close = () => {
+      Chatra('minimizeWidget')
+      Chatra('hide')
+    }
+
+    const open = () => {
+      Chatra('openChat', true)
+      Chatra('show')
+    }
+
+    window.ChatraSetup = {
+      startHidden: true
+    }
+  
+    window.chatBtnFn = () => {
+      const isShow = document.getElementById('chatra').classList.contains('chatra--expanded')
+      isShow ? close() : open()
+    }
+  } else if (isChatHideShow) {
+    window.chatBtn = {
+      hide: () => {
+        Chatra('hide')
+      },
+      show: () => {
+        Chatra('show')
+      }
+    }
+  }
+
+  (function(d, w, c) {
+    w.ChatraID = 'Xjgb72cDfiFJXzFty'
+    var s = d.createElement('script')
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments)
+    }
+    s.async = true
+    s.src = 'https://call.chatra.io/chatra.js'
+    if (d.head) d.head.appendChild(s)
+  })(document, window, 'Chatra')
+
+})()</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

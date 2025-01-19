@@ -1,0 +1,467 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>『编译技术』SysY-Mips编译器设计——中端代码优化 | Yang's CS World</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="『编译技术』SysY-Mips编译器设计——中端代码优化章节目录  『编译技术』SysY-Mips编译器设计——总体设计概述 『编译技术』SysY-Mips编译器设计——词法分析 『编译技术』SysY-Mips编译器设计——语法分析 『编译技术』SysY-Mips编译器设计——语义分析(符号表管理与错误处理) 『编译技术』SysY-Mips编译器设计——中间代码LLVM生成 『编译技术』SysY-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="『编译技术』SysY-Mips编译器设计——中端代码优化">
+<meta property="og:url" content="https://yangyzzzz.github.io/post/867e51bf.html">
+<meta property="og:site_name" content="Yang&#39;s CS World">
+<meta property="og:description" content="『编译技术』SysY-Mips编译器设计——中端代码优化章节目录  『编译技术』SysY-Mips编译器设计——总体设计概述 『编译技术』SysY-Mips编译器设计——词法分析 『编译技术』SysY-Mips编译器设计——语法分析 『编译技术』SysY-Mips编译器设计——语义分析(符号表管理与错误处理) 『编译技术』SysY-Mips编译器设计——中间代码LLVM生成 『编译技术』SysY-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yangyzzzz.github.io/img/fufu4.jpeg">
+<meta property="article:published_time" content="2024-10-11T08:54:11.000Z">
+<meta property="article:modified_time" content="2024-10-12T09:32:14.261Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="编译技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yangyzzzz.github.io/img/fufu4.jpeg"><link rel="shortcut icon" href="/img/avatar.jpeg"><link rel="canonical" href="https://yangyzzzz.github.io/post/867e51bf.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d431d91edffce9d7bd7ade045956b24b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":5,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10000,"languages":{"author":"作者: Yang","link":"链接: ","source":"来源: Yang's CS World","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '『编译技术』SysY-Mips编译器设计——中端代码优化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-12 17:32:14'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/light.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/windmill.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/fufu4.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="Yang's CS World"></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">『编译技术』SysY-Mips编译器设计——中端代码优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-11T08:54:11.000Z" title="发表于 2024-10-11 16:54:11">2024-10-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-12T09:32:14.261Z" title="更新于 2024-10-12 17:32:14">2024-10-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="『编译技术』SysY-Mips编译器设计——中端代码优化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/867e51bf.html#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="『编译技术』SysY-Mips编译器设计——中端代码优化"><a href="#『编译技术』SysY-Mips编译器设计——中端代码优化" class="headerlink" title="『编译技术』SysY-Mips编译器设计——中端代码优化"></a>『编译技术』SysY-Mips编译器设计——中端代码优化</h1><p><strong>章节目录</strong></p>
+<ul>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/80c7e14a.html">『编译技术』SysY-Mips编译器设计——总体设计概述</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/c6d56501.html">『编译技术』SysY-Mips编译器设计——词法分析</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/898866d1.html">『编译技术』SysY-Mips编译器设计——语法分析</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/eebe4e1.html">『编译技术』SysY-Mips编译器设计——语义分析(符号表管理与错误处理)</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/810d8044.html">『编译技术』SysY-Mips编译器设计——中间代码LLVM生成</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/a0d75678.html">『编译技术』SysY-Mips编译器设计——目标代码Mips生成</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/867e51bf.html">『编译技术』SysY-Mips编译器设计——中端代码优化</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/9f6855b5.html">『编译技术』SysY-Mips编译器设计——后端代码优化</a></em></strong></li>
+<li><strong><em><a href="https://yangyzzzz.github.io/post/dffb4f71.html">『编译技术』SysY-Mips编译器设计——实验总结</a></em></strong></li>
+</ul>
+<h2 id="零-前言"><a href="#零-前言" class="headerlink" title="零. 前言"></a>零. 前言</h2><p>本部分任务为对LLVM中间代码做出代码优化，实际上大量的优化都集中于此。不要指望看这份文档就能看明白优化，因为笔者整理时也看不明白了。</p>
+<h2 id="一-Mem2Reg"><a href="#一-Mem2Reg" class="headerlink" title="一. Mem2Reg"></a>一. Mem2Reg</h2><h3 id="0-何为Mem2Reg？"><a href="#0-何为Mem2Reg？" class="headerlink" title="0. 何为Mem2Reg？"></a>0. 何为Mem2Reg？</h3><p><strong>在sysY中定义的变量称作原始变量，而在LLVM中的一个个变量我会称作虚拟变量(后续很有可能会统称为变量…但实际不一样)，定义和赋值的概念不再区分</strong>。</p>
+<p>本优化不考虑全局变量和数组，仅针对单值<code>int</code>和指针(本质上是一字节的值)进行优化。我们最初的LLVM已经是SSA单赋值形式，而mem2reg这步，对于用LLVM为中间代码的我来说，应当是对原先的LLVM打散再重构的过程。</p>
+<p>首先要明确，最初的LLVM是单赋值且单使用(除去<code>Alloc</code>指令)，一个原始变量被拆成过多的虚拟变量，因为我们使用的每一个原始变量都是从内存中<code>LOAD</code>取出，即一个虚拟变量被单赋值的同时也仅被使用了一次。</p>
+<p>我们现在要依据每个原始变量的<code>def-use</code>链(一个变量的生命周期，从被定义，到被使用，到再次被定义结束) 改造成单赋值多使用的形式，同样是将原始变量拆成多个虚拟变量，但是仅在定义时拆。通过这第一步，我们便可以消去一部分的访存指令。但由此会引发一个重大的问题，借用教程的图图。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2F%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%2Fblog%2F2024%2F10%2F12%2F16-19-51-a52672cbc083b84f1bf7c2159250bb26-img_9-d0fdec.png" alt></p>
+<p>在分支汇总处，一个原始变量的取值会取决于数据从哪条分支上流入，上图AB块中的两个<code>y</code>我们称作<code>y1</code>和<code>y2</code>，print块中的<code>y</code>并非定义而是使用，那么它的取值便成了未知数，我们用<code>y3 = phi [A, y1], [B, y2]</code> 这条指令对<code>y</code>进行一次定义，<code>y3</code>成为此时<code>y</code>的唯一取值。</p>
+<p>接下来的工作便是以<strong>基本块</strong>为最小单位找到插入<code>phi</code>指令的位置，进而找到哪些变量需要使用<code>phi</code>指令的返回值。核心目标是<strong>使得每一个原始变量在代码的任何地点有唯一的虚拟变量取值</strong>。</p>
+<h3 id="1-计算基本块前驱与后继结点"><a href="#1-计算基本块前驱与后继结点" class="headerlink" title="1. 计算基本块前驱与后继结点"></a>1. 计算基本块前驱与后继结点</h3><p>依据基本块跳转指令来记录每一个基本块的前驱和后继基本块们就可以，记录基本块前驱与后继。进入节点无前驱，退出节点(最后一条为return语句的基本块)无后继。</p>
+<h3 id="2-计算被支配节点（支配集合）"><a href="#2-计算被支配节点（支配集合）" class="headerlink" title="2. 计算被支配节点（支配集合）"></a>2. 计算被支配节点（支配集合）</h3><p>首先定义如下:</p>
+<ol>
+<li><p>支配（dominate）：如果CFG（Control Flow Graph）中从起始节点到基本块<code>y</code>的所有路径都经过了基本块<code>x</code>，我们说<code>x</code>支配<code>y</code>，按照这个定义，每一个节点都支配自己。</p>
+</li>
+<li><p>严格支配(strict dominate)：如果<code>x</code>支配<code>y</code>，且<code>x</code>不等于<code>y</code>，那么<code>x</code>严格支配<code>y</code>。</p>
+</li>
+<li><p>直接支配者（immediate dominator, idom）：严格支配<code>n</code>，且不严格支配任何严格支配 <code>n</code> 的节点的节点(直观理解就是所有严格支配n的节点中离<code>n</code>最近的那一个)，我们称其为<code>n</code>的直接支配者。</p>
+</li>
+</ol>
+<p>接下来我们计算每个节点被哪些节点支配。<strong>Lengauer-Tarjan</strong>算法较为复杂，我们采用<strong>迭代数据流算法</strong>，流程如下:</p>
+<ol>
+<li>将起始节点设为<code>r</code>，初始化为仅被自己支配</li>
+<li>其余起始支配节点初始化皆为被全部节点支配。每个基本块保存一个<code>HashMap&lt;BasicBlock, Boolean&gt;</code>用作记录被支配关系。</li>
+<li>每次迭代取前驱结点的被支配集合的交集与自身的并，直至集合无变化，此时得到各节点支配关系，注意这不是支配树。</li>
+</ol>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2F%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%2Fblog%2F2024%2F10%2F12%2F16-25-39-dd072775f32b3b7a90be4bce257b8933-img-d8c8f4.png" alt></p>
+<p>所谓<code>a</code>严格支配<code>b</code>，对符号<code>x</code>而言，即<code>b</code>中的第一次定义<code>x</code>之前的值完全由<code>a</code>的最后一次定义来决定，不存在任何歧义。因此显然自己无法严格支配自己。</p>
+<h3 id="3-计算直接支配者"><a href="#3-计算直接支配者" class="headerlink" title="3. 计算直接支配者"></a>3. 计算直接支配者</h3><p>根据定义(严格支配<code>n</code>，且不严格支配任何严格支配 <code>n</code> 的节点的节点)计算，我们已经求得支配 <code>n</code> 结点的全部节点，只需要遍历一遍即可找到藏在其中的直接支配节点。</p>
+<p>每个节点的直接支配者是其父节点，根据此关系我们构造出了<strong>支配树</strong>。</p>
+<h3 id="4-计算支配边界"><a href="#4-计算支配边界" class="headerlink" title="4. 计算支配边界"></a>4. 计算支配边界</h3><p>首先明确为何计算支配边界，一个节点的支配边界代表着支配范围的边界，在该节点对变量的定义会在边界处会产生歧义(即这个定义只是多个取值的可能一种取值)，因此我们需要计算支配边界来找到插<code>phi</code>的位置。</p>
+<p>我们已经求得每个节点的直接支配者，采用如图算法。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2F%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%2Fblog%2F2024%2F10%2F12%2F16-17-12-b5f837e26fd005a0fb4f8a5fa3fb4b5d-img_1-282e4b.png" alt="img_1.png"></p>
+<p>简单解释该算法，我们遍历有向图中每一条边(<code>a</code>指向<code>b</code>)，从两个节点最近的位置，即一条边开始，逐渐沿<code>a</code>的直接支配者往上，直至<code>a</code>能够直接支配<code>b</code>，在此之前的遍历到的所有节点，其支配边界都该包含<code>b</code>。</p>
+<p>注意，<strong>自己可以是自己的支配边界</strong>，考虑 <code>0 --&gt; 1 --&gt; 2 --&gt; 1</code>，即出现回边时，自己基本块的定义也可能不由自己决定。</p>
+<h3 id="5-插入phi节点"><a href="#5-插入phi节点" class="headerlink" title="5. 插入phi节点"></a>5. 插入phi节点</h3><p>核心算法如图：我们得到了支配边界后，此时以原始变量作为最小单位，记录下原始变量在哪些基本块中被定义过(此时需要与符号表配合，见改造符号表一节)，进而找到基本块集合的支配边界，由于我们要在支配边界上插入定义的<code>phi</code>指令，支配边界也便成了定义的基本块，因此需要将支配边界也纳入基本块集合中，同时记录支配边界们，直至找到<strong>闭包</strong>，定义基本块集合不再变化。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2F%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%2Fblog%2F2024%2F10%2F12%2F16-33-01-2d5f05e724c833b755a16cbf33d9654d-img_2-c31c24.png" alt></p>
+<p>这时我们求得了待插phi的支配边界集合，但是要明确的是，<strong>经过上述算法得到的是可能插入<code>phi</code>的位置，并非一定插入</strong>，由于我们的文法支持各处定义，在一个基本块插入<code>phi</code>值时可能出现该变量未被定义的情况，这是不应该的，因此在得到插入<code>phi</code>的基本块集合后，需再次判断该变量在该基本块是否存在定义。<strong>这一条限制是我们SysY文法的限制，而非一般算法中给出</strong>。</p>
+<p>在重命名前，即使<code>Phi</code>指令未被填全，但是该指令的<code>Value</code>(即该变量在基本块中的新定义)已然存在。新增的<code>Phi</code>填充完毕，意味着此时变量定义已然完备，一个变量在任何位置都具备了变量唯一性，重命名只需要做两件事，计算<code>Phi</code>指令流入的<code>Value</code>，为一开始找不到定义的假标签找到属于它的<code>Value</code>。</p>
+<p>证明：插入phi后，若在当前基本块x仍找不到定义，则其真正的定义一定在直接支配者y中：</p>
+<p>当前基本块找不到定义，说明当前基本块未定义，且未插phi，说明该基本块未被当作支配边界，则该基本块定义唯一来自其直接支配者y。</p>
+<h3 id="6-重命名phi"><a href="#6-重命名phi" class="headerlink" title="6. 重命名phi"></a>6. 重命名phi</h3><p>我们由第三步可得知节点的父节点，根据父节点推出每个节点的子节点，构建支配树，为接下来DFS做准备。</p>
+<p>我们需要DFS支配树，基本块<code>a</code>是基本块<code>b</code>的直接支配者并不意味着基本块<code>b</code>中的变量由<code>a</code>中的变量直接决定，而是由<code>a</code>中的变量和将<code>b</code>作为支配边界的基本块们中的变量共同决定。</p>
+<p>重命名需要三步：</p>
+<ol>
+<li>需要判断当前插入的<code>phi</code>的合理性，即是否沿每条前驱块都能找到对应定义；</li>
+<li>为<code>phi</code>指令的每一条数据流找到归属；</li>
+<li>重命名该基本块内在生成<code>phi</code>之前无法得到准确赋值的被使用的变量。</li>
+</ol>
+<p>为<code>phi</code>值添加基本块流，需要保证其每一个前驱基本块都要为<code>phi</code>提供一条数据流，对于每一前驱块，沿其直接支配者找到最近的该原始变量定义，将其填入<code>phi</code>指令中。这一步的正确性<strong>基于DFS支配树</strong>，保证遍历到一节点时，其直接支配者的<code>phi</code>指令都已装配完毕。</p>
+<p>重命名假标签同理，首先判断在<code>Phi</code>指令的插入后能否在当前基本块找到定义，若找到则重命名假标签为该<code>phi</code>值；若找不到，则沿其直接支配者找到最近的定义即可。</p>
+<p>上述寻找过程一定都能找到，因为在插入PHI以后，已经<strong>确保了每个原始变量在每一时刻的虚拟变量的唯一性</strong>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> a1 = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (a1 &gt; <span class="number">3</span>) &#123;</span><br><span class="line">        a1 = a1 + <span class="number">3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>考虑如上情况<code>a1</code>应该被唯一确定，<code>if</code>内<code>a1</code>并非处在<code>a1</code>的决策边界处，DFS支配树。</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2F%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%2Fblog%2F2024%2F10%2F12%2F16-17-12-d9fba2ed59384e5a46c4158d312d2c00-img_10-484c1b.png" alt="img_10.png"></p>
+<p>给出官方的算法，由于本人到这一步看不太明白，因此上文均是自己推导，经评测验证应为正确。</p>
+<h2 id="二-基本块合并"><a href="#二-基本块合并" class="headerlink" title="二. 基本块合并"></a>二. 基本块合并</h2><p>这一步应用在CFG之后，计算支配关系之前，因为涉及到对基本块的删除，主要工作有二：</p>
+<ol>
+<li>将非连通基本块删除</li>
+<li>将相邻基本块(该基本块有且只有一个前驱且该前驱有且只有当前基本块一个后继)和二为一，指令相融合</li>
+</ol>
+<p>由于我们在上文已把基本块的关系构建完毕，接下来处理较为容易，有两点需要注意：</p>
+<ul>
+<li><p>基本块间的关系是一个双向链表，在合并以及删除时应注意前驱节点和后继节点的修正。</p>
+<p>具体来说，设被合并删除的基本块为<code>a</code>，合并的基本块为<code>b</code>，则<code>a</code>不再是<code>b</code>唯一的后继节点，而<code>a</code>的后继节点成为<code>b</code>新的后继节点；<code>a</code>的后继节点们的前驱节点也不再是<code>a</code>，而替换为<code>b</code>!</p>
+</li>
+<li><p>合并基本块会导致定义位置紊乱，可能无法沿支配树找到最近<code>Value</code>，需要额外的操作。</p>
+<ul>
+<li>我们可以遍历被合并的块全部指令，用合并块的定义表进行匹配，将能匹配上的假标签替换为合并的块的定义<code>Value</code>，由于存在先后关系，定义表中保存的变量定义是最后一次定义，而被合并块存在的假标签一定是在该基本块第一次定义之前出现的，因此匹配正确性得到保证。</li>
+<li>将被合并块的定义符号表(<code>IrSymbolTable</code>)转移到合并块的定义符号表，若合并块中存在该变量定义，则替换(因为被合并块的在合并块之后)；若不存在，则加入。</li>
+</ul>
+</li>
+</ul>
+<h2 id="三-死代码删除"><a href="#三-死代码删除" class="headerlink" title="三. 死代码删除"></a>三. 死代码删除</h2><h3 id="1-概念："><a href="#1-概念：" class="headerlink" title="1. 概念："></a>1. 概念：</h3><p>程序包含的一些代码可能并不会被运行或者不会对结果产生影响，那么我们称这种代码为死代码。我们将不会被运行到的称为不可达代码，将不会对结果产生影响的代码成为无用代码。删除无用或不可达代码可以缩减IR代码，可使程序更小、编译更快、执行也更快。</p>
+<h3 id="2-死函数删除"><a href="#2-死函数删除" class="headerlink" title="2. 死函数删除"></a>2. 死函数删除</h3><p>构造函数调用链，删除没有使用过的函数。不过这一步只能减少生成的代码，并不会减少执行的cycle。使用BFS计算出有价值函数的闭包，其余删除。</p>
+<h3 id="3-死代码删除"><a href="#3-死代码删除" class="headerlink" title="3. 死代码删除"></a>3. 死代码删除</h3><p>我们目前认为的有价值指令有：<code>br, ret, call, store</code>（有待商榷，需要进一步做内存分析，全局变量的<code>store</code>可以无脑加，局部变量的<code>store</code>取决于后续有无使用它的，需要涉及到公众子表达式删除等问题），其中<code>store</code>会在后文进一步优化。</p>
+<p>采用逆推的形式，将所有有价值指令标记，再将有价值指令的操作数标记，大体思路同死函数删除，使用BFS计算出有价值指令闭包，其余指令删除。</p>
+<h2 id="四-局部公共子表达式删除"><a href="#四-局部公共子表达式删除" class="headerlink" title="四. 局部公共子表达式删除"></a>四. 局部公共子表达式删除</h2><p>局部子表达式删除的正确性建立在基本块内指令的顺序执行。若是在全局范围内优化，则需要考量基本块执行顺序的问题，出现哈希冲突时并不代表其中存在可以优化的项，例如在两个分支中出现了</p>
+<pre><code>分支1：c1 = a + b, d1 = c1 + a；
+分支2：c2 = a + b, d2 = c2 + a；
+</code></pre><p>此时我们不能将<code>c2</code>优化为<code>c1</code>，因为<code>c1</code>在这条分支中不会被计算。我们针对部分指令进行局部子表达式删除，包含<code>add,sub,mul,div,getelementptr,cmp</code>。该优化以每条指令为最小单元，站在基本块视角进行，步骤如下：</p>
+<ol>
+<li>对于每个<code>BasicBlock</code>初始化一个哈希表</li>
+<li>对每条指令，获取它的操作数和操作符，根据操作数和操作符计算哈希值，需要特别考虑<code>add，mul，cmp</code>三类指令，他们存在着多种等价形式，<code>add</code>和<code>mul</code>将操作数颠倒同样等价，而<code>cmp</code>需要考虑的更多，例如<code>a&gt;b</code>和<code>b&lt;a</code>等价。</li>
+<li>扫描基本块内全部指令，计算哈希值，如果哈希表中已经存在该值，那么我们直接将<code>BasicBlock</code>里后续用到该<code>Value</code>的地方全部替换为哈希表内存的<code>Value</code>，否则将哈希值及对应的<code>Value</code>存入哈希表</li>
+</ol>
+<h2 id="五-常量折叠与传播"><a href="#五-常量折叠与传播" class="headerlink" title="五. 常量折叠与传播"></a>五. 常量折叠与传播</h2><ul>
+<li><p>提前计算好操作数为常数的表达式，针对<code>add,sub,mul,div,cmp</code>等进行了常量折叠，缩减计算指令。</p>
+</li>
+<li><p>只进行了较为简单的复杂折叠，诸如 <code>0 * a, 1 * a, 0 + a, a - 0, 0 / a</code> 等相邻情况的简单优化。</p>
+</li>
+</ul>
+<h2 id="六-优化Store"><a href="#六-优化Store" class="headerlink" title="六. 优化Store"></a>六. 优化Store</h2><p>有时我们会在<code>load</code>之前多次对同一个地址进行<code>store</code>，那么显然只有最后一个<code>store</code>是有效的，前面的<code>store</code>指令可删除。因此我们可进行内存分析，删除一些无用的store指令，注意删除后可能会暴露新的优化空间，需要再次进行死代码删除。</p>
+<h2 id="七-全局指令移动（超简化版）"><a href="#七-全局指令移动（超简化版）" class="headerlink" title="七. 全局指令移动（超简化版）"></a>七. 全局指令移动（超简化版）</h2><p>指令移动时有如下要求：</p>
+<ol>
+<li>操作数在循环中不变，为定值。</li>
+<li>移动不会产生<strong>副作用</strong>：比如涉及存入内存等指令，若提出循环外，则可能没进循环，却由于外提而执行这条指令导致影响下文，这种即产生了副作用。</li>
+<li>为变量赋值也是一种会产生副作用的操作，经过了死代码删除后，留下的被赋值的变量一定会在下文中被用到，外提还需要对<code>phi</code>指令做一些处理，比如循环外对<code>i</code>赋值，循环内也对<code>i</code>赋值(但满足操作数不变)，此时在循环结束后使用<code>i</code>值，正常应该是使用<code>phi</code>将两个数据流汇总，而外提后存在一些问题。</li>
+</ol>
+<p>我们首先通过深度优先遍历CFG找回边得到<strong>处于循环内的基本块</strong>，我们只针对循环内的基本块中某些语句做出前提，一是由于循环外指令再怎么前提也不会产生正面优化，二是指令前提也会产生活跃变量范围增大，溢出节点增多等副作用，需要权衡考虑。</p>
+<p>为简单起见，我们只将偏移量为常数的<code>gpr(getElementPtr)</code>指令尝试前移至基地址的定义位置之后，若使用全局变量基地址则前移至入口基本块处，如此可避免多次重复计算访存地址。</p>
+<p>正确性证明：一是<code>gpr</code>内操作数不变，二是<code>gpr</code>的结果并非是原始变量，而是临时变量，不会对<code>phi</code>流产生影响，一定不会存在副作用。</p>
+<p>经实际检验，简化版的指令移动在第七个竞速测试点已经得到了大量优化！同时可以肯定地说，这部分优化非常关键，是做完Mem2Reg后提升性能的关键！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YangYzzzz.github.io">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yangyzzzz.github.io/post/867e51bf.html">https://yangyzzzz.github.io/post/867e51bf.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YangYzzzz.github.io" target="_blank">Yang's CS World</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF/">编译技术</a></div><div class="post_share"><div class="social-share" data-image="/img/fufu4.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/9f6855b5.html" title="『编译技术』SysY-Mips编译器设计——后端代码优化"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780723_p0_master1800.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">『编译技术』SysY-Mips编译器设计——后端代码优化</div></div></a></div><div class="next-post pull-right"><a href="/post/a0d75678.html" title="『编译技术』SysY-Mips编译器设计——目标代码Mips生成"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123230344_p0_master1200.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">『编译技术』SysY-Mips编译器设计——目标代码Mips生成</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/dffb4f71.html" title="『编译技术』SysY-Mips编译器设计——实验总结"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123213282_p1_master1400.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-12</div><div class="title">『编译技术』SysY-Mips编译器设计——实验总结</div></div></a></div><div><a href="/post/9f6855b5.html" title="『编译技术』SysY-Mips编译器设计——后端代码优化"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780723_p0_master1800.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-12</div><div class="title">『编译技术』SysY-Mips编译器设计——后端代码优化</div></div></a></div><div><a href="/post/a0d75678.html" title="『编译技术』SysY-Mips编译器设计——目标代码Mips生成"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123230344_p0_master1200.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-11</div><div class="title">『编译技术』SysY-Mips编译器设计——目标代码Mips生成</div></div></a></div><div><a href="/post/810d8044.html" title="『编译技术』SysY-Mips编译器设计——中间代码LLVM生成"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/106505220_p0_master1800.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-11</div><div class="title">『编译技术』SysY-Mips编译器设计——中间代码LLVM生成</div></div></a></div><div><a href="/post/eebe4e1.html" title="『编译技术』SysY-Mips编译器设计——语义分析(符号表管理与错误处理)"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/113646857_p0_master1700.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-11</div><div class="title">『编译技术』SysY-Mips编译器设计——语义分析(符号表管理与错误处理)</div></div></a></div><div><a href="/post/80c7e14a.html" title="『编译技术』SysY-Mips编译器设计——总体设计概述"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu3.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-10</div><div class="title">『编译技术』SysY-Mips编译器设计——总体设计概述</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Yang</div><div class="author-info__description">友链请私戳我</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YangYzzzz"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/YangYzzzz" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:21373037@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://blog.csdn.net/weixin_71968907" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">青山依旧在，几度夕阳红</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8E%E7%BC%96%E8%AF%91%E6%8A%80%E6%9C%AF%E3%80%8FSysY-Mips%E7%BC%96%E8%AF%91%E5%99%A8%E8%AE%BE%E8%AE%A1%E2%80%94%E2%80%94%E4%B8%AD%E7%AB%AF%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">『编译技术』SysY-Mips编译器设计——中端代码优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%B6-%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">零. 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-Mem2Reg"><span class="toc-number">1.2.</span> <span class="toc-text">一. Mem2Reg</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0-%E4%BD%95%E4%B8%BAMem2Reg%EF%BC%9F"><span class="toc-number">1.2.1.</span> <span class="toc-text">0. 何为Mem2Reg？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AE%A1%E7%AE%97%E5%9F%BA%E6%9C%AC%E5%9D%97%E5%89%8D%E9%A9%B1%E4%B8%8E%E5%90%8E%E7%BB%A7%E7%BB%93%E7%82%B9"><span class="toc-number">1.2.2.</span> <span class="toc-text">1. 计算基本块前驱与后继结点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%AE%A1%E7%AE%97%E8%A2%AB%E6%94%AF%E9%85%8D%E8%8A%82%E7%82%B9%EF%BC%88%E6%94%AF%E9%85%8D%E9%9B%86%E5%90%88%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">2. 计算被支配节点（支配集合）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%AE%A1%E7%AE%97%E7%9B%B4%E6%8E%A5%E6%94%AF%E9%85%8D%E8%80%85"><span class="toc-number">1.2.4.</span> <span class="toc-text">3. 计算直接支配者</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%AE%A1%E7%AE%97%E6%94%AF%E9%85%8D%E8%BE%B9%E7%95%8C"><span class="toc-number">1.2.5.</span> <span class="toc-text">4. 计算支配边界</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%8F%92%E5%85%A5phi%E8%8A%82%E7%82%B9"><span class="toc-number">1.2.6.</span> <span class="toc-text">5. 插入phi节点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E9%87%8D%E5%91%BD%E5%90%8Dphi"><span class="toc-number">1.2.7.</span> <span class="toc-text">6. 重命名phi</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E5%9F%BA%E6%9C%AC%E5%9D%97%E5%90%88%E5%B9%B6"><span class="toc-number">1.3.</span> <span class="toc-text">二. 基本块合并</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E6%AD%BB%E4%BB%A3%E7%A0%81%E5%88%A0%E9%99%A4"><span class="toc-number">1.4.</span> <span class="toc-text">三. 死代码删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A6%82%E5%BF%B5%EF%BC%9A"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 概念：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%AD%BB%E5%87%BD%E6%95%B0%E5%88%A0%E9%99%A4"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 死函数删除</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%AD%BB%E4%BB%A3%E7%A0%81%E5%88%A0%E9%99%A4"><span class="toc-number">1.4.3.</span> <span class="toc-text">3. 死代码删除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E5%B1%80%E9%83%A8%E5%85%AC%E5%85%B1%E5%AD%90%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%88%A0%E9%99%A4"><span class="toc-number">1.5.</span> <span class="toc-text">四. 局部公共子表达式删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-%E5%B8%B8%E9%87%8F%E6%8A%98%E5%8F%A0%E4%B8%8E%E4%BC%A0%E6%92%AD"><span class="toc-number">1.6.</span> <span class="toc-text">五. 常量折叠与传播</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-%E4%BC%98%E5%8C%96Store"><span class="toc-number">1.7.</span> <span class="toc-text">六. 优化Store</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83-%E5%85%A8%E5%B1%80%E6%8C%87%E4%BB%A4%E7%A7%BB%E5%8A%A8%EF%BC%88%E8%B6%85%E7%AE%80%E5%8C%96%E7%89%88%EF%BC%89"><span class="toc-number">1.8.</span> <span class="toc-text">七. 全局指令移动（超简化版）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123213282_p1_master1400.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记2"/></a><div class="content"><a class="title" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2">『深度学习』动手学深度学习——阅读笔记2</a><time datetime="2025-01-19T13:44:19.349Z" title="发表于 2025-01-19 21:44:19">2025-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780754_p0_master1700.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『信息论』信息论——学习笔记1"/></a><div class="content"><a class="title" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1">『信息论』信息论——学习笔记1</a><time datetime="2024-10-30T09:46:33.000Z" title="发表于 2024-10-30 17:46:33">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记2"/></a><div class="content"><a class="title" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2">『机器学习系统』OpenMLSYS——阅读笔记2</a><time datetime="2024-10-29T12:14:02.000Z" title="发表于 2024-10-29 20:14:02">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记1"/></a><div class="content"><a class="title" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1">『机器学习系统』OpenMLSYS——阅读笔记1</a><time datetime="2024-10-29T12:14:00.000Z" title="发表于 2024-10-29 20:14:00">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123182059_p0_master1200.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记1"/></a><div class="content"><a class="title" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1">『深度学习』动手学深度学习——阅读笔记1</a><time datetime="2024-10-29T10:04:51.000Z" title="发表于 2024-10-29 18:04:51">2024-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Yang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">You are not too early，you are not too late，you are very much on time in your time zone</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: 'Ov23liK7Xv2gk4Mj8hqI',
+      clientSecret: 'a380272ec98afefe58e4fdfacaa66c9eb159e415',
+      repo: 'BlogComment',
+      owner: 'YangYzzzz',
+      admin: ['YangYzzzz'],
+      id: '80cd2d0dca5fe8a3a816045585d741ec',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><div class="aplayer no-destroy" data-id="2108205877" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="true"></script><script>(() => {
+  const isChatBtn = true
+  const isChatHideShow = false
+
+  if (isChatBtn) {
+    const close = () => {
+      Chatra('minimizeWidget')
+      Chatra('hide')
+    }
+
+    const open = () => {
+      Chatra('openChat', true)
+      Chatra('show')
+    }
+
+    window.ChatraSetup = {
+      startHidden: true
+    }
+  
+    window.chatBtnFn = () => {
+      const isShow = document.getElementById('chatra').classList.contains('chatra--expanded')
+      isShow ? close() : open()
+    }
+  } else if (isChatHideShow) {
+    window.chatBtn = {
+      hide: () => {
+        Chatra('hide')
+      },
+      show: () => {
+        Chatra('show')
+      }
+    }
+  }
+
+  (function(d, w, c) {
+    w.ChatraID = 'Xjgb72cDfiFJXzFty'
+    var s = d.createElement('script')
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments)
+    }
+    s.async = true
+    s.src = 'https://call.chatra.io/chatra.js'
+    if (d.head) d.head.appendChild(s)
+  })(document, window, 'Chatra')
+
+})()</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

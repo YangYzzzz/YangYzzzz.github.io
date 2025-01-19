@@ -1,0 +1,625 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>『机器学习系统』OpenMLSYS——阅读笔记1 | Yang's CS World</title><meta name="author" content="Yang"><meta name="copyright" content="Yang"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="『机器学习系统』OpenMLSYS——阅读笔记1❀目录❀ 『机器学习系统』OpenMLSYS——阅读笔记1 『机器学习系统』OpenMLSYS——阅读笔记2 前言OpenMLSYS电子书链接。本书阅读于24年暑假，每天上午一章节，随阅读随记录笔记，记录的不详尽或复制粘贴原文之处敬请谅解。By the way，当时正处于没有一个offer的痛苦阶段，已经考虑转行做深度学习系统，进而阅读了这本书。 平">
+<meta property="og:type" content="article">
+<meta property="og:title" content="『机器学习系统』OpenMLSYS——阅读笔记1">
+<meta property="og:url" content="https://yangyzzzz.github.io/post/d00a62b9.html">
+<meta property="og:site_name" content="Yang&#39;s CS World">
+<meta property="og:description" content="『机器学习系统』OpenMLSYS——阅读笔记1❀目录❀ 『机器学习系统』OpenMLSYS——阅读笔记1 『机器学习系统』OpenMLSYS——阅读笔记2 前言OpenMLSYS电子书链接。本书阅读于24年暑假，每天上午一章节，随阅读随记录笔记，记录的不详尽或复制粘贴原文之处敬请谅解。By the way，当时正处于没有一个offer的痛苦阶段，已经考虑转行做深度学习系统，进而阅读了这本书。 平">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yangyzzzz.github.io/img/fufu2.jpeg">
+<meta property="article:published_time" content="2024-10-29T12:14:00.000Z">
+<meta property="article:modified_time" content="2024-10-30T03:43:11.246Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="机器学习系统">
+<meta property="article:tag" content="实习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yangyzzzz.github.io/img/fufu2.jpeg"><link rel="shortcut icon" href="/img/avatar.jpeg"><link rel="canonical" href="https://yangyzzzz.github.io/post/d00a62b9.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d431d91edffce9d7bd7ade045956b24b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":5,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":10000,"languages":{"author":"作者: Yang","link":"链接: ","source":"来源: Yang's CS World","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '『机器学习系统』OpenMLSYS——阅读笔记1',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-30 11:43:11'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/light.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/windmill.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/fufu2.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="Yang's CS World"></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-graduation-cap"></i><span> 博文</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-archive"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 生活</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fa fa-camera-retro"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-music"></i><span> 音乐</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/comment/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/artitalk/"><i class="fa-fw fas fa-comments"></i><span> 说说</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于笔者</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">『机器学习系统』OpenMLSYS——阅读笔记1</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-10-29T12:14:00.000Z" title="发表于 2024-10-29 20:14:00">2024-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-10-30T03:43:11.246Z" title="更新于 2024-10-30 11:43:11">2024-10-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%B3%BB%E7%BB%9F/">机器学习系统</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="『机器学习系统』OpenMLSYS——阅读笔记1"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/post/d00a62b9.html#post-comment"><span class="gitalk-comment-count"><i class="fa-solid fa-spinner fa-spin"></i></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="『机器学习系统』OpenMLSYS——阅读笔记1"><a href="#『机器学习系统』OpenMLSYS——阅读笔记1" class="headerlink" title="『机器学习系统』OpenMLSYS——阅读笔记1"></a>『机器学习系统』OpenMLSYS——阅读笔记1</h1><p>❀<strong>目录</strong>❀</p>
+<p><strong><em><a href="https://yangyzzzz.github.io/post/d00a62b9.html">『机器学习系统』OpenMLSYS——阅读笔记1</a></em></strong></p>
+<p><strong><em><a href="https://yangyzzzz.github.io/post/b2db68a7.html">『机器学习系统』OpenMLSYS——阅读笔记2</a></em></strong></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong><em><a target="_blank" rel="noopener" href="https://openmlsys.github.io/">OpenMLSYS电子书链接</a></em></strong>。本书阅读于24年暑假，每天上午一章节，随阅读随记录笔记，记录的不详尽或复制粘贴原文之处敬请谅解。By the way，当时正处于没有一个offer的痛苦阶段，已经考虑转行做深度学习系统，进而阅读了这本书。</p>
+<p>平心而论，该书电子版用的和《动手学深度学习》一样的模板，但内容质量差距较大（勿喷）。不过MLSYS近年来才起步并仍在发展，作者愿意总结知识并著作已经不可多得，这仍然是我最推荐入门机器学习系统的好书~</p>
+<h2 id="AI编译器与前端技术"><a href="#AI编译器与前端技术" class="headerlink" title="AI编译器与前端技术"></a>AI编译器与前端技术</h2><h3 id="计算机求导的方法"><a href="#计算机求导的方法" class="headerlink" title="计算机求导的方法"></a>计算机求导的方法</h3><ol>
+<li><p>手动微分：人工计算表达式</p>
+</li>
+<li><p>数值微分：无穷小逼近，会产生<strong>截断误差</strong>；浮点数运算，会产生<strong>舍入误差</strong></p>
+</li>
+<li><p>符号微分：不复用产生的变换结果，存在表达式膨胀问题</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-32-68303d27e6f9d889d64653877053772f-image-20240726135822824-280f81.png" alt="image-20240726135822824"></p>
+</li>
+<li><p>自动微分（机器学习框架使用）：将计算机程序中的运算操作分解为一个有限的基本操作集合，且集合中基本操作的求导规则均为已知。在完成每一个基本操作的求导后，使用链式法则将结果组合得到整体程序的求导结果。我们将着重介绍自动微分。</p>
+<ul>
+<li>前向自动微分：构建计算图，边前向传播，边时刻计算中间变量对输入的导数。最后得到，<strong>每个输出对单个输入的导数</strong>。</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-32-3aeeda16c7e1a269211588497471e914-image-20240726140947894-07507d.png" alt="image-20240726140947894"></p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-45-06-db941c885728ce0bf2f801f768017cb0-image-20240726140957081-4f35b1.png" alt></p>
+<p>​        当我们对一个函数求导，想要得到的是该函数的任意输出对任意输入的偏导集合，因此经过多个上述步骤，得到一个<strong>雅可比矩阵</strong>。</p>
+<ul>
+<li><p>反向自动微分：先前向传播，记录中间变量与依赖关系，再反向传播计算最终输出y对各个中间变量的导数。最后得到，<strong>单个输出对所有输入的导数</strong>。</p>
+<p>这种模式是机器学习系统中常见的，因此通常采用反向自动微分。反向涉及到对某变量梯度的累加，如下图的V0，在V3计算中依赖，在V2计算中依赖，因此第二个$\bar{V_0}$的计算需要与第一个$\bar{V_0}$的计算相加！</p>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-46-26-a9cbff0d723e2efec8b9c96d7c4ee38f-image-20240726195221932-7c41ef.png" alt></p>
+<h3 id="自动微分的方法——拆成多个原子操作："><a href="#自动微分的方法——拆成多个原子操作：" class="headerlink" title="自动微分的方法——拆成多个原子操作："></a>自动微分的方法——拆成多个原子操作：</h3><ol>
+<li>基本表达式法</li>
+<li>操作符重载（Pytorch）</li>
+<li>代码变换法ST（MindSpore）</li>
+</ol>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-46-52-8bf114549fe0898c146f456fce8e2074-image-20240726201849200-836b19.png" alt></p>
+</li>
+</ol>
+<h3 id="静态分析与类型系统"><a href="#静态分析与类型系统" class="headerlink" title="静态分析与类型系统"></a>静态分析与类型系统</h3><p><strong>类型系统</strong>：类型系统用于定义不同的类型，指定类型的操作和类型之间的相互作用，其功能为：正确性，安全性，优化，抽象。python是动态强类型，但由于其解释执行的方式，运行速度往往较慢。若想要生成运行高效的后端代码，后端框架需要优化友好的静态强类型中间表示。需要将Python前端表示转换成等价的静态强类型中间表示，以此给用户同时带来高效的开发效率和运行效率，例如Hindley–Milner（HM）类型系统。</p>
+<p><strong>静态分析</strong>：对中间表示进行处理分析，并且生成一个静态强类型的中间表示，用于后续的编译优化、自动并行以及自动微分等。</p>
+<h2 id="编译器后端与运行时"><a href="#编译器后端与运行时" class="headerlink" title="编译器后端与运行时"></a>编译器后端与运行时</h2><h3 id="计算图优化"><a href="#计算图优化" class="headerlink" title="计算图优化"></a>计算图优化</h3><ul>
+<li><p>通用硬件优化：与特定硬件类型无关，核心是子图的等价变换，在计算图中匹配特定的子图结构，找到目标结构后，通过等价替换方式，将其替换为更优的子图结构。</p>
+<ul>
+<li><p>目的：计算更密集，减少低效内存访问</p>
+</li>
+<li><p>计算密集型算子，访存密集型算子。通常相伴出现，可以合并。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-48-30-5638fb9eda0b63011cf7fbddca9efd9b-image-20240801113909677-98f8b2.png" alt></p>
+<ul>
+<li><p>自动算子生成技术：算子拆解，算子聚合，算子重建。</p>
+</li>
+<li><p>特定硬件优化：往往某些硬件不支持一些算子，或有一些额外性质，比如硬件指令的限制，数据排布格式的限制等。</p>
+</li>
+</ul>
+<h3 id="算子选择"><a href="#算子选择" class="headerlink" title="算子选择"></a>算子选择</h3><p>为计算图上的每个算子分配在设备上执行的算子，往往计算图的每一个节点都有一组设备算子与之对应</p>
+<ul>
+<li><p>获取算子信息：数据排布格式 + 计算精度</p>
+<ul>
+<li><p><strong>数据排布格式</strong>：矩阵乘法的第二个矩阵，最好是按列优先存储，如此可通过访问连续内存的方式加快数据访问速度。计算机对张量的存储方式为展平成一维！</p>
+<ol>
+<li><p>默认的数据排布格式（图像）：NCHW, NHWC</p>
+</li>
+<li><p>问题：访问元素时内存不连续，而输入的数据往往大于计算部件一次计算所容纳的最大范围，因此需要切片分批计算，增大访存开销。</p>
+</li>
+<li><p>解决：块布局格式，硬件加速指令</p>
+</li>
+</ol>
+</li>
+<li><p><strong>数据精度</strong>：单精度(float32)，半精度(float16)</p>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-34-cb181fb91721b0f93346b7af8b292090-image-20240801120028238-894deb.png" alt="image-20240801120028238"></p>
+</li>
+<li><p>算子信息库：一个硬件上支持的所有算子的集合定义为该硬件的算子信息库。算子选择过程就是从算子信息库中选择最合适算子的过程。</p>
+</li>
+<li><p>选择过程：选择硬件设备，根据排布格式与数据类型选择<strong>合适</strong>的算子。由于不同硬件支持的算子不一，存在算子选择的算子与用户预期的类型不一致的现象，此时会降精度或其他处理。</p>
+</li>
+</ul>
+<h3 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h3><p>显存称为Device内存，CPU内存称为Host内存。CPU和硬件加速器的控制器无法直接访问对方的内存。该步骤即为输入输出分配内存地址。</p>
+<ul>
+<li><p><strong>为输入，权重，输出分配内存地址</strong>：输入往往是上一算子的输出，因此可将上一算子的输出地址<strong>共享</strong>到该输入，可避免冗余拷贝与空间占用。因此，需要分配的内存有三种类型：整张图的输入，算子权重，算子的输出</p>
+</li>
+<li><p>内存的管理方式：</p>
+<ul>
+<li><p>内存池：申请一定数量的内存块留作备用，当程序有内存申请需求时，直接从内存池中的内存块中申请，当程序释放该内存块时，内存池会进行回收并用作后续程序内存申请时使用。</p>
+</li>
+<li><p>双游标法分配：一侧分配生命周期较长的权重张量，一侧分配生命周期较短的算子输出张量。通过这种方式，只需要从设备上申请一次足够大的内存，后续算子的内存分配都是通过指针偏移进行分配，减少了直接从设备申请内存的耗时。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-51-18-e44a1effada54cc1db56a98e1bfb4c56-image-20240801121904965-c3fa72.png" alt></p>
+<ul>
+<li>内存复用：<ul>
+<li>定义：已使用结束的算子输出的内存可用于后续算子输出的内存分配。</li>
+<li>内存生命周期图：横坐标生命周期，纵坐标所占内存区域。如何分配更多矩形！是NP完全问题！</li>
+</ul>
+</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-53-48-cc7e364e466cfe58515734817002913e-image-20240801122418787-1e6cf0.png" alt></p>
+<ul>
+<li>内存分配优化手段：内存融合（对一些特殊的算子，分配连续的设备地址）；In-Place算子（Pytorch有，一些Bug产生的万恶之源），即原地操作，无需新开地址拷贝一份张量操作，而是直接对原内存地址相应位置操作。</li>
+</ul>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-54-07-f6888e526f4a8a882e4a9910a272ffb8-image-20240801123205364-069366.png" alt></p>
+<h3 id="计算调度与执行"><a href="#计算调度与执行" class="headerlink" title="计算调度与执行"></a>计算调度与执行</h3><ul>
+<li><p>单算子调度：运行时算子被逐个执行，无法上下文优化，无法并行计算，不采用！</p>
+</li>
+<li><p>计算图调度：一张计算图可以由运行在不同设备上的算子组成异构计算图</p>
+<ul>
+<li><p>CPU算子：C++语言编写的在Host上执行的算子，性能取决于是否能够充分利用CPU多核心的计算能力。</p>
+</li>
+<li><p>GPU算子：将GPU Kernel诸葛下发到GPU设备上并行加速，AI芯片上具备大量的并行执行单元。</p>
+</li>
+<li><p>NPU算子：支持将部分或整个计算图下沉到芯片中完成计算，计算过程中不与Host发生交互，因此具备较高的计算性能。</p>
+</li>
+<li><p>Python算子：Python解释器解释执行，与CPU算子类似</p>
+</li>
+<li>并发执行：下图明显可并发执行，但需注意一些并发执行会引起副作用<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-35-df8012f76cf8537660a73236bc676027-image-20240801124528978-805dec.png" alt="image-20240801124528978"></li>
+</ul>
+</li>
+<li><p>交互式执行：框架的运行时根据计算图中算子的依赖关系，按照某种执行序（例如广度优先序）逐个将算子下发到硬件上执行</p>
+<ul>
+<li><p>非异构计算图的执行方式：</p>
+<ul>
+<li><p>串行执行：广度优先</p>
+</li>
+<li><p>并行执行：按依赖关系展开<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-56-54-b362232d298accd9bb84cc5700bb7d4e-image-20240801130640291-c3bb45.png" alt></p>
+</li>
+</ul>
+</li>
+<li><p>异构计算图的执行方式：首先将异构计算图切分为多个非异构计算图，进而引申两种执行方式。（通常默认是并行执行）</p>
+<ul>
+<li><p><strong>子图拆分执行</strong>：将切分后的子图分开执行，上一个子图的输出会传输给下一个子图的输入，并且需要将输入数据拷贝到本图device上。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-59-14-3e60cb70de0cf4462b3656eb2068fb6a-image-20240801131109552-055b41.png" alt></p>
+</li>
+<li><p>子图合并执行：将多个子图合并，交接处插入<strong>设备拷贝算子</strong>，以实现不同设备算子数据传输，将整张图形成一个大的整图执行。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-00-17-9a3e5ae7d8bf313226c6019b51fae2aa-image-20240801131118929-b7e8be.png" alt></p>
+</li>
+<li><p>下沉式执行：将整个或部分计算图一次性调度到芯片上以完成全量数据的计算，避免了在计算过程中主机侧和设备侧的交互，因此可以获得更好的整体计算性能。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="硬件加速器"><a href="#硬件加速器" class="headerlink" title="硬件加速器"></a>硬件加速器</h2><ul>
+<li><p>硬件加速器的结构：存储单元（片上缓存）（寄存器文件+共享内存+L1L2缓存）+计算密集型计算单元（标量+向量+张量计算单元）</p>
+</li>
+<li><p>加速器编程：编程接口调用，算子编译器优化</p>
+<ul>
+<li><p>编程接口使能加速器</p>
+<ul>
+<li>算子库层级</li>
+<li>编程原语层级</li>
+<li>指令层级</li>
+</ul>
+</li>
+<li><p>算子编译器使能加速器</p>
+</li>
+<li><p>算子长尾问题：指在深度学习模型中,尽管大多数计算由常见的、常规形式的算子(如卷积、矩阵乘法等)完成,但仍然存在大量种类繁多的非常规算子。这些非常规算子的出现频率相对较低,但它们的总数和种类却在不断增加。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>矩阵乘法加速的实践</strong>：</p>
+<ul>
+<li><p>最基本：每个输出元素由一个线程计算，共M*N个线程</p>
+</li>
+<li><p><strong>计算强度（计算指令数量/访存指令数量）优化</strong>：</p>
+<ul>
+<li><p>如果在K次循环的内积计算中一次读取矩阵A中的m个元素和矩阵B中的n个元素，那么访存指令为m+n条，而计算指令为2mn条，所以计算强度为$\frac{2mn}{m+n}$，因此可以很容易发现提高和会带来计算强度的提升。</p>
+</li>
+<li><p>实现：使用<strong>宽指令</strong>，一个128位的宽指令一次可以读取4个float数，因此现在可以将C划分为4*4的矩形块，每个线程处理一个矩形块的运算。进一步，一个线程可以处理多个矩形块的运算。</p>
+</li>
+<li><p>缺点：并行度大幅降低<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-02-18-5ff2f109fdf56756940d96921387f1a5-image-20240728221919975-d8e0e0.png" alt><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-02-59-5ea5eb6b7724a7e5e2d9b3669c34947f-image-20240728221932124-00700c.png" alt></p>
+</li>
+</ul>
+</li>
+<li><p><strong>使用共享内存优化</strong>（优化的核心并不在明面上的复杂度，而是合理利用<strong>并行</strong>与<strong>高速缓存</strong>）：</p>
+<ul>
+<li><p>观察：处理矩阵C同一行的线程x,y需要读取矩阵A中相同的数据。</p>
+</li>
+<li><p>对于每一个线程块，先集合所有线程将所需的矩阵元素读进共享内存，再分别从共享内存读取元素进行乘加法运算。</p>
+</li>
+<li><p>图中表述为：将$K$拆成$tileK$块，每块$\frac{K}{tileK}$个元素。使用外层循环读取每块的元素，使用内层循环计算当前子块的结果。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-03-45-fb9bb687a05446928b0544789962e9d7-image-20240728223826799-bdd177.png" alt></p>
+</li>
+</ul>
+</li>
+<li><p><strong>流水线优化</strong>：</p>
+<ul>
+<li><p>前提：本次循环的整个内层循环过程中不依赖下一次循环的数据。</p>
+</li>
+<li><p>读共享内存的周期仍多于计算所用的周期，可通过一定方式隐藏对共享内存的访问，重新优化流水线降低读取延迟。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-04-14-d9d761d160714ed8d38aebe3545ca3cf-image-20240728223859792-0eadc1.png" alt></p>
+</li>
+<li><p>进一步，读全局内存时同样能做上述优化，从而实现隐藏全局内存读取延迟的目的。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-39-7dae9738e8756a0bc5650804dc87b7be-image-20240728225155829-38147f.png" alt="image-20240728225155829"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据处理模块"><a href="#数据处理模块" class="headerlink" title="数据处理模块"></a>数据处理模块</h2><ul>
+<li><p>易用性：基于描述数据集变换的编程抽象提供编程接口与变换算子，数据集创建方式</p>
+</li>
+<li><p>高效性</p>
+<ul>
+<li><p>数据读取：统一文件格式，并行化读取（<code>num_workers</code>）</p>
+</li>
+<li><p>数据计算（预处理）：</p>
+<ul>
+<li><p>底层架构层面：流水线并行，算子并行；异构计算（CPU+GPU），分布式（多服务器数据处理）</p>
+</li>
+<li><p>编译算法层面：AI编译层面的计算图优化，同将多个操作融合或调换顺序实现优化。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>保序性：即在<code>shuffle</code>的后续操作中，不能对数据的输出顺序有改变。通过不同进程间的<code>connector</code>队列实现。</p>
+</li>
+</ul>
+<h2 id="模型部署"><a href="#模型部署" class="headerlink" title="模型部署"></a>模型部署</h2><h3 id="训练时模型-➡-推理时模型"><a href="#训练时模型-➡-推理时模型" class="headerlink" title="训练时模型 ➡ 推理时模型"></a>训练时模型 ➡ 推理时模型</h3><ul>
+<li><p>ONNX(Open Neural Network Exchange)神经网络交换协议：将不同框架的模型使用中间语言统一表示</p>
+</li>
+<li><p>推理时优化：推理时一些层的行为改变，且权重参数皆为常数。算子融合，算子替换，算子重排。</p>
+</li>
+</ul>
+<h3 id="✳模型压缩✳"><a href="#✳模型压缩✳" class="headerlink" title="✳模型压缩✳"></a>✳<strong>模型压缩</strong>✳</h3><ul>
+<li><p>模型量化：将权重与激活值从浮点数映射到整数（int8），实现存储上的压缩与推理上的加速，在输出层及某些层需要通过<strong>反量化</strong>将整数映射回浮点数。<strong>需要在模型精度与效率间达到平衡</strong></p>
+<p><strong>QLoRA</strong>: 一种使用量化方案的LoRA，原LLM量化为4位（四位如何表达数值有很大讲究）后，再使用LoRA微调</p>
+</li>
+<li><p>模型稀疏（剪枝）：</p>
+<ul>
+<li><p>动机：过参数化，激活值特征图中能利用的有效信息相对于整张图占比较小</p>
+</li>
+<li><p>方法：将权重与激活值的某些强度较弱的值（绝对值大小）设置为0，0值所占的比例称为模型稀疏度。</p>
+<ul>
+<li><p>结构化稀疏：在通道或者卷积核层面对模型进行剪枝。这种稀疏方式能够得到规则且规模更小的权重矩阵</p>
+</li>
+<li><p>非结构化稀疏：以对权重张量中任意位置的权重进行裁剪</p>
+</li>
+<li><p>稀疏策略：$预训练 —— 稀疏剪枝 —— 微调 / 训练 —— 剪枝 —— 训练 …$<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-09-24-35f899f96641079e58f118c2c28e030c-image-20240731150800525-5ee017.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>知识蒸馏（教师-学生神经网络学习算法）：教师网络是训练好的网络，学生网络是待训练网络，通常参数更少。</p>
+<ul>
+<li><p>方法1：同时令学生网络的结果接近真实标签结果与教师神经网络的分类结果<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-10-21-729b7d365e123c5feaa0d5f560ce4465-image-20240731151514750-5b7a38.png" alt></p>
+</li>
+<li><p>方法2：仅将教师网络的输出中提取有价值的信息与学生同步远远不够，还可以从中间结果（特征图）中挖掘信息与学生同步。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-40-c5210b3a2a08bcc66862bcbec23dc03a-image-20240731152024171-211f2b.png" alt="image-20240731152024171"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="推理优化"><a href="#推理优化" class="headerlink" title="推理优化"></a>推理优化</h3><ul>
+<li><p>并行计算：矩阵乘，拆成多个线程同步运算</p>
+</li>
+<li><p>算子优化：</p>
+<ul>
+<li><p>硬件汇编指令优化：合理利用硬件寄存器，提升缓存命中率、优化汇编性能</p>
+</li>
+<li><p>算法优化：<strong>卷积的矩阵乘法优化</strong></p>
+<ul>
+<li><p>img2col：卷积的本质仍是矩阵乘法，具体而言，将输入与权重分别做重排，对输入而言，将$1<em>IH</em>IW<em>IC$重排为$(OH</em>OW)<em>(KH</em>KW<em>IC)$，即将与卷积核运算的每个区域展开成一行，根据步长和填充，获得$OH</em>OW$行：<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F10-20-41-5e2246806998a64cc35f6288087cc62d-image-20240731165724176-666844.png" alt="image-20240731165724176"></p>
+<p>对权重而言，将一个卷积核展开为权重矩阵的一列，共$OC$列，最后二者矩阵乘法，得到$OH<em>OW</em>OC$维度的特征图。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-12-21-c9cda5663d1ae02e7ea47486ebe4c7a2-image-20240731170110208-403c7a.png" alt></p>
+</li>
+<li><p>Winograd算法：简化卷积运算，减少非常量乘法运算，增加常量加法与乘法运算，使用中需要取舍。<img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="https://cdn.jsdelivr.net/gh/YangYzzzz/image-store@main/fix-dir%2FTypora%2Ftypora-user-images%2F2024%2F10%2F30%2F11-12-59-aa5d63f1c09ad2a6f35ab798d8ab0e47-image-20240731170930345-d30949.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://YangYzzzz.github.io">Yang</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yangyzzzz.github.io/post/d00a62b9.html">https://yangyzzzz.github.io/post/d00a62b9.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://YangYzzzz.github.io" target="_blank">Yang's CS World</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%B3%BB%E7%BB%9F/">机器学习系统</a><a class="post-meta__tags" href="/tags/%E5%AE%9E%E4%B9%A0/">实习</a></div><div class="post_share"><div class="social-share" data-image="/img/fufu2.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">『机器学习系统』OpenMLSYS——阅读笔记2</div></div></a></div><div class="next-post pull-right"><a href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123182059_p0_master1200.jpeg" onerror="onerror=null;src='/img/404.jpeg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">『深度学习』动手学深度学习——阅读笔记1</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/32f03788.html" title="『智谱清言』深度学习环境常见问题"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-14</div><div class="title">『智谱清言』深度学习环境常见问题</div></div></a></div><div><a href="/post/b5b4da6e.html" title="『智谱清言』CogVLM2部署实践"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/niyan1.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-30</div><div class="title">『智谱清言』CogVLM2部署实践</div></div></a></div><div><a href="/post/d5823525.html" title="『机器学习系统』Deepseekv2"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/121363908_p0_master1600.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-07</div><div class="title">『机器学习系统』Deepseekv2</div></div></a></div><div><a href="/post/aa8ef5fe.html" title="『机器学习系统』Ray使用文档"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/122961566_p1_master1200.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-08-07</div><div class="title">『机器学习系统』Ray使用文档</div></div></a></div><div><a href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-29</div><div class="title">『机器学习系统』OpenMLSYS——阅读笔记2</div></div></a></div><div><a href="/post/510af8c4.html" title="『智谱清言』Linux裸机配置"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/91942417_p0_master1800.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-03</div><div class="title">『智谱清言』Linux裸机配置</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/avatar.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Yang</div><div class="author-info__description">友链请私戳我</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">51</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/YangYzzzz"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/YangYzzzz" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:21373037@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://blog.csdn.net/weixin_71968907" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">青山依旧在，几度夕阳红</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8E%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%B3%BB%E7%BB%9F%E3%80%8FOpenMLSYS%E2%80%94%E2%80%94%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01"><span class="toc-number">1.</span> <span class="toc-text">『机器学习系统』OpenMLSYS——阅读笔记1</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AI%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%8E%E5%89%8D%E7%AB%AF%E6%8A%80%E6%9C%AF"><span class="toc-number">1.2.</span> <span class="toc-text">AI编译器与前端技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%B1%82%E5%AF%BC%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.1.</span> <span class="toc-text">计算机求导的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%BE%AE%E5%88%86%E7%9A%84%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94%E6%8B%86%E6%88%90%E5%A4%9A%E4%B8%AA%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%EF%BC%9A"><span class="toc-number">1.2.2.</span> <span class="toc-text">自动微分的方法——拆成多个原子操作：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E4%B8%8E%E7%B1%BB%E5%9E%8B%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.2.3.</span> <span class="toc-text">静态分析与类型系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%90%8E%E7%AB%AF%E4%B8%8E%E8%BF%90%E8%A1%8C%E6%97%B6"><span class="toc-number">1.3.</span> <span class="toc-text">编译器后端与运行时</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%9B%BE%E4%BC%98%E5%8C%96"><span class="toc-number">1.3.1.</span> <span class="toc-text">计算图优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%97%E5%AD%90%E9%80%89%E6%8B%A9"><span class="toc-number">1.3.2.</span> <span class="toc-text">算子选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">1.3.3.</span> <span class="toc-text">内存分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E8%B0%83%E5%BA%A6%E4%B8%8E%E6%89%A7%E8%A1%8C"><span class="toc-number">1.3.4.</span> <span class="toc-text">计算调度与执行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text">硬件加速器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E6%A8%A1%E5%9D%97"><span class="toc-number">1.5.</span> <span class="toc-text">数据处理模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2"><span class="toc-number">1.6.</span> <span class="toc-text">模型部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E6%97%B6%E6%A8%A1%E5%9E%8B-%E2%9E%A1-%E6%8E%A8%E7%90%86%E6%97%B6%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.6.1.</span> <span class="toc-text">训练时模型 ➡ 推理时模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%B3%E6%A8%A1%E5%9E%8B%E5%8E%8B%E7%BC%A9%E2%9C%B3"><span class="toc-number">1.6.2.</span> <span class="toc-text">✳模型压缩✳</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96"><span class="toc-number">1.6.3.</span> <span class="toc-text">推理优化</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123213282_p1_master1400.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记2"/></a><div class="content"><a class="title" href="/post/52e1e34e.html" title="『深度学习』动手学深度学习——阅读笔记2">『深度学习』动手学深度学习——阅读笔记2</a><time datetime="2025-01-19T13:44:19.349Z" title="发表于 2025-01-19 21:44:19">2025-01-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/119780754_p0_master1700.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『信息论』信息论——学习笔记1"/></a><div class="content"><a class="title" href="/post/a83ff101.html" title="『信息论』信息论——学习笔记1">『信息论』信息论——学习笔记1</a><time datetime="2024-10-30T09:46:33.000Z" title="发表于 2024-10-30 17:46:33">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu5.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记2"/></a><div class="content"><a class="title" href="/post/b2db68a7.html" title="『机器学习系统』OpenMLSYS——阅读笔记2">『机器学习系统』OpenMLSYS——阅读笔记2</a><time datetime="2024-10-29T12:14:02.000Z" title="发表于 2024-10-29 20:14:02">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/fufu2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『机器学习系统』OpenMLSYS——阅读笔记1"/></a><div class="content"><a class="title" href="/post/d00a62b9.html" title="『机器学习系统』OpenMLSYS——阅读笔记1">『机器学习系统』OpenMLSYS——阅读笔记1</a><time datetime="2024-10-29T12:14:00.000Z" title="发表于 2024-10-29 20:14:00">2024-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/img/123182059_p0_master1200.jpeg" onerror="this.onerror=null;this.src='/img/404.jpeg'" alt="『深度学习』动手学深度学习——阅读笔记1"/></a><div class="content"><a class="title" href="/post/866b08a7.html" title="『深度学习』动手学深度学习——阅读笔记1">『深度学习』动手学深度学习——阅读笔记1</a><time datetime="2024-10-29T10:04:51.000Z" title="发表于 2024-10-29 18:04:51">2024-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Yang</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">You are not too early，you are not too late，you are very much on time in your time zone</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="chat-btn" type="button" title="聊天"><i class="fas fa-sms"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="/js/tw_cn.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, '']
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: 'Ov23liK7Xv2gk4Mj8hqI',
+      clientSecret: 'a380272ec98afefe58e4fdfacaa66c9eb159e415',
+      repo: 'BlogComment',
+      owner: 'YangYzzzz',
+      admin: ['YangYzzzz'],
+      id: '9c2b1f68206c2540f61b7e6f4530a749',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><div class="aplayer no-destroy" data-id="2108205877" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="true"> </div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="true"></script><script>(() => {
+  const isChatBtn = true
+  const isChatHideShow = false
+
+  if (isChatBtn) {
+    const close = () => {
+      Chatra('minimizeWidget')
+      Chatra('hide')
+    }
+
+    const open = () => {
+      Chatra('openChat', true)
+      Chatra('show')
+    }
+
+    window.ChatraSetup = {
+      startHidden: true
+    }
+  
+    window.chatBtnFn = () => {
+      const isShow = document.getElementById('chatra').classList.contains('chatra--expanded')
+      isShow ? close() : open()
+    }
+  } else if (isChatHideShow) {
+    window.chatBtn = {
+      hide: () => {
+        Chatra('hide')
+      },
+      show: () => {
+        Chatra('show')
+      }
+    }
+  }
+
+  (function(d, w, c) {
+    w.ChatraID = 'Xjgb72cDfiFJXzFty'
+    var s = d.createElement('script')
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments)
+    }
+    s.async = true
+    s.src = 'https://call.chatra.io/chatra.js'
+    if (d.head) d.head.appendChild(s)
+  })(document, window, 'Chatra')
+
+})()</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
