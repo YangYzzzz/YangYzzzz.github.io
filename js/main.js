@@ -464,7 +464,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // find head position & add active class
-    const $articleList = $article.querySelectorAll('h1,h2,h3,h4,h5,h6')
+    const headings = 'h1,h2,h3,h4,h5,h6'
+    let $articleList = $article.querySelectorAll(headings)
     let detectItem = ''
     const findHeadPosition = top => {
       if (top === 0) {
@@ -521,6 +522,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 100)
 
     btf.addEventListenerPjax(window, 'scroll', tocScrollFn, { passive: true })
+    if (isToc && $article.querySelector('#publication-groups')) {
+      btf.addEventListenerPjax($article, 'publicationgroupschange', () => {
+        $articleList = $article.querySelectorAll(headings)
+        $tocLink = $cardToc.querySelectorAll('.toc-link')
+        detectItem = ''
+        $cardToc.querySelectorAll('.active').forEach(item => item.classList.remove('active'))
+        tocScrollFn()
+      })
+    }
   }
 
   const handleThemeChange = mode => {

@@ -22,6 +22,7 @@ function valid(reading) {
 }
 
 function render() {
+  let paperCountsChanged = false
   for (const el of document.querySelectorAll('[data-citation-id]')) {
     const id = el.dataset.citationId
     const reading = readings[id]
@@ -35,10 +36,13 @@ function render() {
       const checked = document.getElementById('citation-time')
       checked.dateTime = el.dataset.checked
       checked.textContent = stamp
-    } else {
+    } else if (Number(el.dataset.count) !== reading.count) {
+      el.dataset.count = String(reading.count)
       el.textContent = 'Cited by ' + count
+      paperCountsChanged = true
     }
   }
+  if (paperCountsChanged) document.getElementById('publications')?.dispatchEvent(new Event('citationcountschange'))
 }
 
 async function fetchRecord(path) {

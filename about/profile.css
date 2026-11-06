@@ -109,7 +109,7 @@
 .about-site #card-toc .toc-content { margin: 0; width: auto; }
 .about-site #card-toc .toc-content > ol { margin: 0 !important; }
 .about-site #card-toc .toc-link { padding: 2px 8px; color: var(--muted); border-radius: 3px; line-height: 1.6; }
-.about-site #card-toc .toc-year { padding-left: 13px; font-variant-numeric: tabular-nums; }
+.about-site #card-toc .toc-paper-group { padding-left: 13px; font-variant-numeric: tabular-nums; }
 .about-site #aside-content #card-toc .toc-content .toc-link:is(:hover, .active) { color: var(--teal); background: var(--tint); }
 .about-site #article-container { font-size: 16px; line-height: 1.65; }
 .about-site #article-container :is(h2, h3) { margin: 0; color: var(--ink); font-family: var(--serif); font-weight: 500; }
@@ -120,15 +120,42 @@
 .pub-intro { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 5px 16px; }
 .pub-intro h2 { grid-column: 1 / -1; }
 .about-site #article-container .pub-intro p { margin: 0; font-size: 14px; color: var(--muted); }
-.year-nav { display: flex; gap: 6px; }
-.year-nav a {
+.pub-toolbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 10px;
+}
+.paper-sort, .group-nav { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.paper-sort[hidden], .group-nav[hidden] { display: none; }
+.paper-sort > span { margin-right: 3px; color: var(--muted); font-size: 13px; }
+.paper-sort button {
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--teal);
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  cursor: pointer;
+}
+.paper-sort button:hover { background: var(--tint); }
+.paper-sort button[aria-pressed="true"] { border-color: var(--teal); background: var(--teal); color: var(--sheet); }
+.paper-sort button:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+.group-nav a {
   padding: 3px 9px;
   border: 1px solid var(--line);
   border-radius: 4px;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
-.year-nav a:hover { background: var(--tint); }
+.group-nav a:hover { background: var(--tint); }
 .pub-year { margin-top: 30px; }
 .about-site #article-container .pub-year h3 {
   display: flex;
@@ -206,7 +233,7 @@
   .about-site #content-inner { padding: 30px 22px 40px; }
   .pub-intro { display: block; }
   .pub-intro p { padding-top: 5px; }
-  .year-nav { margin-top: 13px; }
+  .pub-toolbar { margin-top: 13px; }
   .pub-year { margin-top: 22px; }
   .history, .contact-list { grid-template-columns: 1fr; gap: 2px; }
   .history dd + dt, .contact-list dd + dt { margin-top: 12px; }
