@@ -69,6 +69,18 @@
   background: #d7ede0;
   color: #183c36;
 }
+.profile-links .citation-total {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 7px;
+  border: 1px solid #73a398;
+  border-radius: 4px;
+  color: #d6eee3;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.profile-intro .citation-checked { margin: 6px 0 0; font-size: 12px; color: #d0e1dc; }
 .jump-pubs span { margin-left: 8px; }
 .about-site #content-inner {
   max-width: 1152px;
@@ -141,6 +153,14 @@
   font: 12px/1.5 ui-monospace, "SFMono-Regular", Consolas, monospace;
   text-transform: uppercase;
   letter-spacing: .05em;
+}
+.about-site #article-container .paper-citations {
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .paper-meta span { color: var(--teal); font-size: 12px; font-weight: 650; border-left: 1px solid var(--line); padding-left: 12px; }
 .about-site #article-container .paper-title { margin: 5px 0 6px; font: 500 clamp(21px, 2.1vw, 26px)/1.24 var(--serif); letter-spacing: -.022em; }
